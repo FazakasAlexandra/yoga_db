@@ -28,7 +28,8 @@ class Users extends BaseController
 
   public function post()
   {
-    /*     $jwt = $this->request->getHeader('Authorization')->getValue();
+    /*
+    $jwt = $this->request->getHeader('Authorization')->getValue();
     $user = $this->queryUser('jwt', $jwt);
 
     // only a registered and admin user can perform this acction
