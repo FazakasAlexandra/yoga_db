@@ -39,12 +39,14 @@ POST
   users/
     -> insert a single user
 */
+
 $routes->group('users', function ($routes) {
 	$routes->get('/', 'Users::index');
 	$routes->post('/', 'Users::post');
 });
 $routes->get('users/(:any)/(:any)', 'Users::getUser/$1/$2');
-
+$routes->get('schedules/(:any)/(:any)', 'SchedulesWeeks::index/$1/$2');
+$routes->get('schedules/latest', 'SchedulesWeeks::mostRecent');
 
 /*
  * --------------------------------------------------------------------
