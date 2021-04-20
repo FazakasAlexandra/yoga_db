@@ -45,9 +45,11 @@ $routes->group('users', function ($routes) {
 	$routes->post('/', 'Users::post');
 });
 $routes->get('users/(:any)/(:any)', 'Users::getUser/$1/$2');
+
 $routes->get('schedules/(:any)/(:any)', 'SchedulesWeeks::index/$1/$2');
 $routes->get('schedules/latest', 'SchedulesWeeks::mostRecent');
 
+$routes->post('bookings/(:any)', 'Bookings::postBooking/$1');
 /*
  * --------------------------------------------------------------------
  * Additional Routing
