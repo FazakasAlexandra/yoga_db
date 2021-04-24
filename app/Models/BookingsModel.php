@@ -22,4 +22,16 @@ class BookingsModel extends Model
 
         return $db->insertID();
     }
+
+    function getUserBookings($userId){
+        $db = \Config\Database::connect();
+        $builder = $db->table('bookings');
+
+        $userBookingsIds = $builder->where('user_id', $userId)->select('schedules_weeks_id')->get()->getResult('array');
+        $result = array();
+        foreach ($userBookingsIds as $booking) {
+            array_push($result, $booking['schedules_weeks_id']);
+        }
+        return $result;
+    }
 }
