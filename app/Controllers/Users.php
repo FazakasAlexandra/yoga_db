@@ -72,4 +72,17 @@ class Users extends BaseController
 
     return $usersModel->queryUser($key, $value);
   }
+
+  public function usersNonAdm(){
+    $usersModel = new UsersModel();
+    return $this->respond([
+      'status' => 201,
+      'error' => null,
+      'data' => $usersModel->userClients()
+    ]);
+  }
+
+  public function userHistory($id){
+     echo $id;
+  }
 }

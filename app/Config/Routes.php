@@ -45,11 +45,16 @@ $routes->group('users', function ($routes) {
 	$routes->post('/', 'Users::post');
 });
 $routes->get('users/(:any)/(:any)', 'Users::getUser/$1/$2');
+$routes->get('users/clients', 'Users::usersNonAdm');
+
 
 $routes->get('schedules/(:any)/(:any)', 'SchedulesWeeks::index/$1/$2');
 $routes->get('schedules/latest', 'SchedulesWeeks::mostRecent');
 
 $routes->post('bookings/(:any)', 'Bookings::postBooking/$1');
+
+$routes->get('classes', 'Classes::index');
+$routes->get('classes/dlt/(:any)', 'Classes::dltClass/$1');
 /*
  * --------------------------------------------------------------------
  * Additional Routing

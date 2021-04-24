@@ -8,6 +8,7 @@ class UsersModel extends Model
 {
     protected $allowedFields = ['name_surname', 'email', 'jwt', 'is_admin'];
     protected $table = 'users';
+
     function getAll()
     {
         $db = \Config\Database::connect();
@@ -31,4 +32,13 @@ class UsersModel extends Model
         $builder->insert($user);
         return $db->insertID();
     }
+
+    function userClients(){
+        $db = \Config\Database::connect();
+        return $this->db->table('users')
+                        ->where(['is_admin !=' => 'true'])
+                        ->get()
+                        ->getResultArray();
+    }
+
 }
