@@ -21,7 +21,7 @@ class Bookings extends BaseController
     {
     }
 
-    public function postBooking($weekScheduleId)
+    public function postBooking($weekScheduleId, $classType)
     {
         $usersModel = new UsersModel();
         $jwt = $this->request->getHeader('Authorization')->getValue();
@@ -35,7 +35,7 @@ class Bookings extends BaseController
         }
 
         $bookingsModel = new BookingsModel();
-        $bookingsModel->insertBooking($user->id, $weekScheduleId);
+        $bookingsModel->insertBooking($user->id, $weekScheduleId, $classType);
 
         return $this->setResponseFormat('json')->respond([
             'status' => 201,

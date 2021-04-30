@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class UsersModel extends Model
 {
-    protected $allowedFields = ['name_surname', 'email', 'jwt', 'is_admin'];
+    protected $allowedFields = ['name', 'email', 'jwt', 'is_admin'];
     protected $table = 'users';
 
     function getAll()
@@ -28,7 +28,6 @@ class UsersModel extends Model
     {
         $db = \Config\Database::connect();
         $builder = $db->table('users');
-
         $builder->insert($user);
         return $db->insertID();
     }

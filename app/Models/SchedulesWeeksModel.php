@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use DateTime;
 
 class SchedulesWeeksModel extends Model
 {
@@ -23,6 +24,8 @@ class SchedulesWeeksModel extends Model
                     $result->dateWeekEnd = $schedule['date_week_end'];
 
                     array_push($daySchedule, [
+                        'class_id' => $schedule['class_id'],
+                        'id' => uniqid(),
                         "schedulesWeeksId" => $schedule['schedules_weeks_id'],
                         "hour" => $schedule['hour'],
                         "className" => $schedule['class_name'],
@@ -54,5 +57,12 @@ class SchedulesWeeksModel extends Model
         $builder = $db->table('most_recent_schedule');
 
         return $this->formatData($builder->get()->getResultArray());
+    }
+
+    function insertWeekSchedule($weekSchedule) {
+        $db = \Config\Database::connect();
+        $builder = $db->table('schedules_weeks');
+
+        $builder->insert($weekSchedule);
     }
 }

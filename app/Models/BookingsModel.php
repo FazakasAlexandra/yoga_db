@@ -10,14 +10,15 @@ class BookingsModel extends Model
     protected $table = 'users'; */
 
 
-    function insertBooking($userId, $schedulesWeeksId)
+    function insertBooking($userId, $schedulesWeeksId, $classType)
     {
         $db = \Config\Database::connect();
         $builder = $db->table('bookings');
 
         $builder->insert([
             'user_id' => $userId,
-            'schedules_weeks_id' => $schedulesWeeksId
+            'schedules_weeks_id' => $schedulesWeeksId,
+            'class_type' => $classType
         ]);
 
         return $db->insertID();

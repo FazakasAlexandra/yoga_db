@@ -49,7 +49,7 @@ class Users extends BaseController
     return $this->respond([
       'status' => 200,
       'error' => null,
-      'data' => $newUser
+      'data' => $this->request->getJSON('true')
     ]);
   }
 
