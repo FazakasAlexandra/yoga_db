@@ -26,13 +26,13 @@ class SchedulesWeeksModel extends Model
                     array_push($daySchedule, [
                         'class_id' => $schedule['class_id'],
                         'id' => uniqid(),
-                        "schedulesWeeksId" => $schedule['schedules_weeks_id'],
+                        "schedules_weeks_id" => $schedule['schedules_weeks_id'],
                         "hour" => $schedule['hour'],
-                        "className" => $schedule['class_name'],
-                        "classDescription" => $schedule['class_description'],
-                        "classLevel" => $schedule['class_level'],
-                        "onlinePrice" => $schedule['online_price'],
-                        "offlinePrice" => $schedule['offline_price']
+                        "name" => $schedule['class_name'],
+                        "description" => $schedule['class_description'],
+                        "level" => $schedule['class_level'],
+                        "online_price" => $schedule['online_price'],
+                        "offline_price" => $schedule['offline_price']
                     ]);
                 }
             }
