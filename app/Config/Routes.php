@@ -47,6 +47,9 @@ $routes->group('users', function ($routes) {
 $routes->get('users/(:any)/(:any)', 'Users::getUser/$1/$2');
 $routes->get('users/clients', 'Users::usersNonAdm');
 
+$routes->get('subscriptions/', 'Subscriptions::index');
+$routes->delete('subscriptions/(:any)', 'Subscriptions::deleteSubscription/$1');
+$routes->post('subscriptions', 'Subscriptions::addSubscription');
 
 $routes->get('schedules/(:any)/(:any)', 'SchedulesWeeks::index/$1/$2');
 $routes->get('schedules/latest', 'SchedulesWeeks::mostRecent');
@@ -55,6 +58,7 @@ $routes->post('schedules', 'SchedulesWeeks::postWeekSchedule');
 $routes->post('bookings/(:any)/(:any)', 'Bookings::postBooking/$1/$2');
 
 $routes->get('classes', 'Classes::index');
+$routes->get('classes/attendences', 'Classes::attendences');
 $routes->get('classes/dlt/(:any)', 'Classes::dltClass/$1');
 /*
  * --------------------------------------------------------------------

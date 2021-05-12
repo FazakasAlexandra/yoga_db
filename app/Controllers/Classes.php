@@ -37,4 +37,14 @@ class Classes extends BaseController
             'data' => $classesModel->getClasses()
         ]);
     }
+
+    public function attendences(){
+        $classesModel = new ClassesModel();
+
+        return $this->respond([
+            'status' => 201,
+            'error' => null,
+            'data' => $classesModel->getClassesAttendences()
+        ]);
+    }
 }
