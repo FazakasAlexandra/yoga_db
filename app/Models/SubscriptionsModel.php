@@ -49,8 +49,7 @@ class SubscriptionsModel extends Model
         $builder->insert([
             "name" => $subscription['name'],
             "attendences" => $subscription['attendences'],
-            "offline_price" => $subscription['offline_price'],
-            "online_price" => $subscription['online_price'],
+            "price" => $subscription['price'],
             "months" => $subscription['months'],
             "image" => $imageName
         ]);
@@ -58,6 +57,10 @@ class SubscriptionsModel extends Model
         $subscriptionId = $db->insertID();
         $this->insertDiscounts($subscriptionId, $subscription['discounts']);
         $this->insertFreeEntrences($subscriptionId, $subscription['free_entrences']);
+
+        $subscription['image'] = $imageName;
+        $subscription['id'] = $subscriptionId;
+        return $subscription;
     }
 
     function storeImg($base64Data)
@@ -70,7 +73,7 @@ class SubscriptionsModel extends Model
 
         file_put_contents($path . $imgName . '.png', $data);
 
-        return $imgName;
+        return $imgName.'.png';
     }
 
     function insertDiscounts($subscriptionId, $discounts)
@@ -109,7 +112,6 @@ class SubscriptionsModel extends Model
         $db = \Config\Database::connect();
         $builder = $db->table('subscriptions');
 
-        var_dump(($subscriptionId));
         $builder->delete(['id' => $subscriptionId]);
     }
 }

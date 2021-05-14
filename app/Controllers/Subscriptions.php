@@ -53,12 +53,13 @@ class Subscriptions extends BaseController
 
         $subscriptionsModel = new SubscriptionsModel();
         $subscription = $this->request->getJSON('true');
-        $subscriptionsModel->insertSubscription($subscription);
+        $newSubscription = $subscriptionsModel->insertSubscription($subscription);
 
         return $this->respond([
             'status' => 201,
             'error' => null,
-            'message' => "Subscription added !"
+            'message' => "Subscription added !",
+            "data" => $newSubscription
         ]);
     }
 }
