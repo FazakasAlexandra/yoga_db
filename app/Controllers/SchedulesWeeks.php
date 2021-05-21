@@ -17,6 +17,16 @@ class SchedulesWeeks extends BaseController
     $this->request = \Config\Services::request();
   }
 
+  public function getDaySchedule($date){
+    $schedulesDayModel = new SchedulesDayModel();
+    
+    return $this->respond([
+      'status' => 200,
+      'error' => null,
+      'data' => $schedulesDayModel->getDaySchedule($date)
+    ]);
+  }
+
   public function index($startDate, $endDate)
   {
     $schedulesModel = new SchedulesWeeksModel();

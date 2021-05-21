@@ -35,4 +35,15 @@ class BookingsModel extends Model
         }
         return $result;
     }
+
+    function getClassBookings($schedulesWeeksId){
+        $db = \Config\Database::connect();
+        $builder = $db->table('bookings_view');
+
+        $classBookings = $builder
+        ->where('schedules_weeks_id',$schedulesWeeksId)
+        ->where('state', 'pending')
+        ->get()->getResultArray();
+        return $classBookings;
+    }
 }

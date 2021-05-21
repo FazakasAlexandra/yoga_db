@@ -21,6 +21,16 @@ class Bookings extends BaseController
     {
     }
 
+    public function getClassBookings($weekScheduleId){
+        $bookingsModel = new BookingsModel();
+
+        return $this->setResponseFormat('json')->respond([
+            'status' => 201,
+            'error' => null,
+            'data' => $bookingsModel->getClassBookings($weekScheduleId)
+        ]);
+    }
+
     public function postBooking($weekScheduleId, $classType)
     {
         $usersModel = new UsersModel();

@@ -12,15 +12,19 @@ class SubscriptionsModel extends Model
         $db = \Config\Database::connect();
         $builder = $db->table('subscriptions');
 
-
         $subscriptions = $builder->get()->getResultArray();
 
         foreach ($subscriptions as &$subscription) {
             $subscription['discounts'] = $this->getDiscounts($subscription['id']);
             $subscription['free_entrences'] = $this->getFreeClasses($subscription['id']);
+            $subscription['entrences'] = $this->getEntrences($subscription['id']);
         }
 
         return $subscriptions;
+    }
+
+    function getEntrences($subscriptionId){
+        
     }
 
     function getDiscounts($subscriptionId)

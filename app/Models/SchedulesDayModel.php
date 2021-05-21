@@ -14,4 +14,12 @@ class SchedulesDayModel extends Model
         $builder->insert($daySchedule);
         return $db->insertID();
     }
+
+    function getDaySchedule($date)
+    {
+        $db = \Config\Database::connect();
+        $builder = $db->table('schedules_weeks_view');
+
+        return $builder->where('date_day =', $date)->get()->getResultArray();
+    }
 }
