@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
-use DateTime;
 
 class SubscriptionsModel extends Model
 {
@@ -24,7 +23,10 @@ class SubscriptionsModel extends Model
     }
 
     function getEntrences($subscriptionId){
-        
+        $db = \Config\Database::connect();
+        $builder = $db->table('entrences_view');
+
+        return $builder->where('subscription_id', $subscriptionId)->get()->getResultArray();
     }
 
     function getDiscounts($subscriptionId)
@@ -48,17 +50,21 @@ class SubscriptionsModel extends Model
         $db = \Config\Database::connect();
         $builder = $db->table('subscriptions');
 
-        $imageName = $this->storeImg($subscription['image']);
+        if($subscription['image']){
+            $imageName = $this->storeImg($subscription['image']);
+        } else {
+            $imageName = "icon.png";
+        }
 
         $builder->insert([
             "name" => $subscription['name'],
-            "attendences" => $subscription['attendences'],
             "price" => $subscription['price'],
             "months" => $subscription['months'],
             "image" => $imageName
         ]);
 
         $subscriptionId = $db->insertID();
+        $this->insertEntrences($subscriptionId, $subscription['entrences']);
         $this->insertDiscounts($subscriptionId, $subscription['discounts']);
         $this->insertFreeEntrences($subscriptionId, $subscription['free_entrences']);
 
@@ -67,17 +73,18 @@ class SubscriptionsModel extends Model
         return $subscription;
     }
 
-    function storeImg($base64Data)
-    {
-        $imgName = uniqid('subscription');
-        $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64Data));
+    function insertEntrences($subscriptionId, $entrences){
+        $db = \Config\Database::connect();
+        $builder = $db->table('entrences');
 
-        // HOW TO GET PATH DINAMICALLY??
-        $path = '/wamp64/www/yoga/public/assets/subscriptions/';
-
-        file_put_contents($path . $imgName . '.png', $data);
-
-        return $imgName.'.png';
+        foreach ($entrences as $entrence) {
+            $builder->insert([
+                'subscription_id' => $subscriptionId,
+                'amount' => $entrence['amount'],
+                'class_id' => $entrence['class_id'],
+                'class_type' => $entrence['class_type']
+            ]);
+        }
     }
 
     function insertDiscounts($subscriptionId, $discounts)
@@ -88,7 +95,7 @@ class SubscriptionsModel extends Model
         foreach ($discounts as $discount) {
             $builder->insert([
                 'subscription_id' => $subscriptionId,
-                'discount' => $discount['discount'],
+                'amount' => $discount['amount'],
                 'class_id' => $discount['class_id'],
                 'class_type' => $discount['class_type']
             ]);
@@ -108,6 +115,19 @@ class SubscriptionsModel extends Model
                 'class_type' => $freeEntrence['class_type']
             ]);
         }
+    }
+
+    function storeImg($base64Data)
+    {
+        $imgName = uniqid('subscription');
+        $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64Data));
+
+        // HOW TO GET PATH DINAMICALLY??
+        $path = '/wamp64/www/yoga/public/assets/subscriptions/';
+
+        file_put_contents($path . $imgName . '.png', $data);
+
+        return $imgName.'.png';
     }
 
     /* should delete image from directory too */
