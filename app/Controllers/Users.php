@@ -81,8 +81,4 @@ class Users extends BaseController
       'data' => $usersModel->userClients()
     ]);
   }
-
-  public function userHistory($id){
-     echo $id;
-  }
 }
