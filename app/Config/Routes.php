@@ -47,14 +47,26 @@ $routes->group('users', function ($routes) {
 $routes->get('users/(:any)/(:any)', 'Users::getUser/$1/$2');
 $routes->get('users/clients', 'Users::usersNonAdm');
 $routes->get('clientshistory/client/(:any)', 'ClientsHistory::client/$1');
+$routes->get('subscriptions/', 'Subscriptions::index');
+$routes->delete('subscriptions/(:any)', 'Subscriptions::deleteSubscription/$1');
+$routes->post('subscriptions', 'Subscriptions::addSubscription');
 
 
 $routes->get('schedules/(:any)/(:any)', 'SchedulesWeeks::index/$1/$2');
 $routes->get('schedules/latest', 'SchedulesWeeks::mostRecent');
+$routes->post('schedules', 'SchedulesWeeks::postWeekSchedule');
 
-$routes->post('bookings/(:any)', 'Bookings::postBooking/$1');
+$routes->post('bookings/(:any)/(:any)', 'Bookings::postBooking/$1/$2');
+//$routes->match(['post'], 'chgstatus/(:any)/(:any)', 'Bookings::chgStatus/$1/$2');
+$routes->get('chgstatus/(:any)/(:any)', 'Bookings::chgStatus/$1/$2');
+//$routes->get('bookings/(:any)', 'Bookings::getBooking/$1');
 
+// gets all classes for one day by date
+$routes->get('classes/date/(:any)', 'SchedulesWeeks::getDaySchedule/$1');
+// gets all bookings for one class based on schedule_weeks_id
+$routes->get('classes/bookings/(:any)', 'Bookings::getClassBookings/$1');
 $routes->get('classes', 'Classes::index');
+$routes->get('classes/attendences', 'Classes::attendences');
 $routes->get('classes/dlt/(:any)', 'Classes::dltClass/$1');
 /*
  * --------------------------------------------------------------------

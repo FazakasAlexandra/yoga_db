@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use DateTime;
 
 class SchedulesWeeksModel extends Model
 {
@@ -23,13 +24,15 @@ class SchedulesWeeksModel extends Model
                     $result->dateWeekEnd = $schedule['date_week_end'];
 
                     array_push($daySchedule, [
-                        "schedulesWeeksId" => $schedule['schedules_weeks_id'],
+                        'class_id' => $schedule['class_id'],
+                        'id' => uniqid(),
+                        "schedules_weeks_id" => $schedule['schedules_weeks_id'],
                         "hour" => $schedule['hour'],
-                        "className" => $schedule['class_name'],
-                        "classDescription" => $schedule['class_description'],
-                        "classLevel" => $schedule['class_level'],
-                        "onlinePrice" => $schedule['online_price'],
-                        "offlinePrice" => $schedule['offline_price']
+                        "name" => $schedule['class_name'],
+                        "description" => $schedule['class_description'],
+                        "level" => $schedule['class_level'],
+                        "online_price" => $schedule['online_price'],
+                        "offline_price" => $schedule['offline_price']
                     ]);
                 }
             }
@@ -54,5 +57,12 @@ class SchedulesWeeksModel extends Model
         $builder = $db->table('most_recent_schedule');
 
         return $this->formatData($builder->get()->getResultArray());
+    }
+
+    function insertWeekSchedule($weekSchedule) {
+        $db = \Config\Database::connect();
+        $builder = $db->table('schedules_weeks');
+
+        $builder->insert($weekSchedule);
     }
 }

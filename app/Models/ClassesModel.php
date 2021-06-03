@@ -15,4 +15,11 @@ class ClassesModel extends Model
 
         return $builder->get()->getResultArray();
     }
+
+    function getClassesAttendences(){
+        $db = \Config\Database::connect();
+        $builder = $db->table('classes_attendences');
+
+        return $builder->get()->getResultArray();
+    }
 }

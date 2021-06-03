@@ -21,7 +21,17 @@ class Bookings extends BaseController
     {
     }
 
-    public function postBooking($weekScheduleId)
+    public function getClassBookings($weekScheduleId){
+        $bookingsModel = new BookingsModel();
+
+        return $this->setResponseFormat('json')->respond([
+            'status' => 201,
+            'error' => null,
+            'data' => $bookingsModel->getClassBookings($weekScheduleId)
+        ]);
+    }
+
+    public function postBooking($weekScheduleId, $classType)
     {
         $usersModel = new UsersModel();
         $jwt = $this->request->getHeader('Authorization')->getValue();
@@ -35,13 +45,66 @@ class Bookings extends BaseController
         }
 
         $bookingsModel = new BookingsModel();
-        $bookingsModel->insertBooking($user->id, $weekScheduleId);
+        $bookingsModel->insertBooking($user->id, $weekScheduleId, $classType);
 
         return $this->setResponseFormat('json')->respond([
             'status' => 201,
             'error' => null,
             'data' => [
                 'message' => 'class successfully booked !'
+            ]
+        ]);
+    }
+
+    // public function getBooking($id){
+    //     $bookingsModel = new BookingsModel();
+    //     $booking = $bookingsModel->getBooking($id);
+    //     // return $this->respond([
+    //     //     'status' => 201,
+    //     //     'error' => null,
+    //     //     'data' => $booking
+    //     //     ]);
+    //     var_dump($booking);
+    //     die();
+    // }
+
+    public function chgStatus($id, $status)
+    {
+        $usersModel = new UsersModel();
+        $jwt = $this->request->getHeader('Authorization')->getValue();
+        $user = $usersModel->queryUser('jwt', $jwt);
+
+        if (!$user) {
+            return $this->respond([
+                'status' => 401,
+                'jwt' => $jwt,
+                'error' => 'Not authorized'
+            ]);
+        }
+
+        $bookingsModel = new BookingsModel();
+        $booking = $bookingsModel->getBooking($id);
+        // $schedules_weeks_id = $booking[0]['schedules_weeks_id'];
+        // $class_type = $booking[0]['class_type'];
+        // $data = [
+        //     'id' => $id,
+        //     'user_id'  => $user->id,
+        //     'schedules_weeks_id'  => $schedules_weeks_id,
+        //     'class_type' => $class_type,
+        //     'state' => $status,
+        // ];
+        
+		if(!empty($status) ){
+            $bookingsModel->updateBookingStatus($id, $status);
+        }
+
+        $newbooking = $bookingsModel->getBooking($id);
+
+        return $this->setResponseFormat('json')->respond([
+            'status' => 201,
+            'error' => 'suntem aici',
+            'data' => [
+                'message' => 'cstatus successfully modified!'
             ]
         ]);
     }
