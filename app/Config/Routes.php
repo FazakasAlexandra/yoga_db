@@ -60,6 +60,11 @@ $routes->post('schedules', 'SchedulesWeeks::postWeekSchedule');
 
 $routes->post('bookings/(:any)/(:any)', 'Bookings::postBooking/$1/$2');
 
+$routes->post('bookings/(:any)/(:any)', 'Bookings::postBooking/$1/$2');
+//$routes->match(['post'], 'chgstatus/(:any)/(:any)', 'Bookings::chgStatus/$1/$2');
+$routes->get('chgstatus/(:any)/(:any)', 'Bookings::chgStatus/$1/$2');
+//$routes->get('bookings/(:any)', 'Bookings::getBooking/$1');
+
 // gets all classes for one day by date
 $routes->get('classes/date/(:any)', 'SchedulesWeeks::getDaySchedule/$1');
 // gets all bookings for one class based on schedule_weeks_id

@@ -7,8 +7,10 @@ use CodeIgniter\Model;
 class BookingsModel extends Model
 {
 /*     protected $allowedFields = ['name_surname', 'email', 'jwt', 'is_admin'];
-    protected $table = 'users'; */
+        protected $table = 'users'; */
 
+       // protected $table = 'bookings';
+       // protected $allowedFields = ['state'];
 
     function insertBooking($userId, $schedulesWeeksId, $classType)
     {
@@ -52,5 +54,17 @@ class BookingsModel extends Model
         }
 
         return $classBookings;
+    }
+
+    function getBooking($id){
+        $db = \Config\Database::connect();
+        $builder = $db->table('bookings');
+        $booking = $builder->where(['id =' => $id])->get()->getResultArray();
+        return $booking;
+    }
+    
+    function updateBookingStatus($id, $status){
+        $db = \Config\Database::connect();
+        return $query = $db->query("UPDATE bookings SET state = '" . $status . "' WHERE bookings.id = " . $id . " ");
     }
 }

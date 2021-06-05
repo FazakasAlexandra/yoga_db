@@ -47,4 +47,5 @@ class Classes extends BaseController
             'data' => $classesModel->getClassesAttendences()
         ]);
     }
+
 }
