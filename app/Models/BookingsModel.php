@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\SubscriptionsModel;
 use CodeIgniter\Model;
 
 class BookingsModel extends Model
@@ -40,10 +40,17 @@ class BookingsModel extends Model
         $db = \Config\Database::connect();
         $builder = $db->table('bookings_view');
 
+        $subsModel = new SubscriptionsModel();
+        
         $classBookings = $builder
         ->where('schedules_weeks_id',$schedulesWeeksId)
         ->where('state', 'pending')
         ->get()->getResultArray();
+
+        foreach ($classBookings as &$booking) {
+            $booking['user_subscriptions'] = $subsModel->getUserSubscriptionByClass($booking['user_id'], $booking['class_id']);
+        }
+
         return $classBookings;
     }
 }

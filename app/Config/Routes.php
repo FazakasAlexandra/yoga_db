@@ -47,6 +47,8 @@ $routes->group('users', function ($routes) {
 $routes->get('users/(:any)/(:any)', 'Users::getUser/$1/$2');
 $routes->get('users/clients', 'Users::usersNonAdm');
 
+$routes->get('subscriptions/user/(:any)/class/(:any)', 'Subscriptions::getUserSubscriptionByClass/$1/$2');
+$routes->get('subscriptions/user/(:any)', 'Subscriptions::userSubscriptions/$1');
 $routes->get('subscriptions/', 'Subscriptions::index');
 $routes->delete('subscriptions/(:any)', 'Subscriptions::deleteSubscription/$1');
 $routes->post('subscriptions', 'Subscriptions::addSubscription');

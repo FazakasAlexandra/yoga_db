@@ -11,6 +11,27 @@ class Subscriptions extends BaseController
 {
     use ResponseTrait;
 
+    public function userSubscriptions($userId){
+        $subscriptionsModel = new SubscriptionsModel();
+
+        return $this->respond([
+            'status' => 200,
+            'error' => null,
+            'data' => $subscriptionsModel->getUserSubscriptions($userId)
+        ]);
+    }
+
+    public function getUserSubscriptionByClass($userid, $classid){
+        $subscriptionsModel = new SubscriptionsModel();
+        $data = $subscriptionsModel->getUserSubscriptionByClass($userid, $classid);
+
+        return $this->respond([
+            'status' => 200,
+            'error' => null,
+            'data' => $data
+        ]);
+    }
+
     public function __construct()
     {
         $this->request = \Config\Services::request();
