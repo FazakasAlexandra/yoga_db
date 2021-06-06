@@ -10,30 +10,31 @@ class ClientsHistory extends BaseController
 {
     use ResponseTrait;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->request = \Config\Services::request();
     }
 
-    public function index(){
-
+    public function index()
+    {
     }
 
-    public function client($id){
+    public function client($id)
+    {
         $usersModel = new UsersModel();
         $data = $usersModel->userClientsHistory($id);
-        
-        if(empty($data)){
+
+        if (empty($data)) {
             return $this->respond([
                 'status' => 201,
                 'error' => 'user is admin'
             ]);
-        }else{
+        } else {
             return $this->respond([
                 'status' => 201,
                 'error' => null,
                 'data' => $usersModel->userClientsHistory($id)
-                ]);
+            ]);
         }
     }
-
 }

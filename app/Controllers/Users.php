@@ -5,6 +5,7 @@ namespace App\Controllers;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\UsersModel;
 use App\Models\BookingsModel;
+use App\Models\SubscriptionsModel;
 use CodeIgniter\HTTP\RequestInterface;
 
 class Users extends BaseController
@@ -75,10 +76,16 @@ class Users extends BaseController
 
   public function usersNonAdm(){
     $usersModel = new UsersModel();
+    $subsModel = new SubscriptionsModel();
+
     $nonAdminUsers = $usersModel->userClients();
 
     foreach ($nonAdminUsers as &$user) {
       $user['history'] = $usersModel->userClientsHistory($user['id']);
+
+      foreach ($user['history'] as &$userHistory) {
+        $userHistory->user_subscriptions = $subsModel->getUserSubscriptionByClass($user['id'], $userHistory->classes_id);
+      }
     }
 
     return $this->respond([

@@ -47,6 +47,7 @@ $routes->group('users', function ($routes) {
 $routes->get('users/(:any)/(:any)', 'Users::getUser/$1/$2');
 $routes->get('users/clients', 'Users::usersNonAdm');
 
+$routes->get('subscriptions/decrease/(:any)/(:any)', 'Subscriptions::decreaseSubscriptionCoverage/$1/$2');
 $routes->get('subscriptions/user/(:any)/class/(:any)', 'Subscriptions::getUserSubscriptionByClass/$1/$2');
 $routes->get('subscriptions/user/(:any)', 'Subscriptions::userSubscriptions/$1');
 $routes->get('subscriptions/', 'Subscriptions::index');

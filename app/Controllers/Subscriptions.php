@@ -11,6 +11,12 @@ class Subscriptions extends BaseController
 {
     use ResponseTrait;
 
+    public function decreaseSubscriptionCoverage($coverageType, $id){
+        $subscriptionsModel = new SubscriptionsModel();
+        $subscriptionsModel->decreaseSubscriptionCoverage($coverageType, $id);
+
+    }
+
     public function userSubscriptions($userId){
         $subscriptionsModel = new SubscriptionsModel();
 

@@ -6,6 +6,16 @@ use CodeIgniter\Model;
 
 class SubscriptionsModel extends Model
 {
+    function decreaseSubscriptionCoverage($coverageType, $id){
+        $table = 'users_subscriptions_'.$coverageType;
+        $db = \Config\Database::connect();
+        $builder = $db->table($table);
+
+        $coverage = $builder->where(['id', $id])->get()->getRowObject();
+
+        $builder->set('remained_entrences', +$coverage->remained_entrences - 1)->where(['id', $id])->update();
+    }
+    
     function getUserSubscriptions($userId)
     {
         $db = \Config\Database::connect();
@@ -50,6 +60,7 @@ class SubscriptionsModel extends Model
     function getUserSubscriptionByClass($userId, $classId)
     {
         $userSubscriptions = $this->getUserSubscriptions($userId);
+
         $subscriptionData = array();
 
         foreach ($userSubscriptions as $subscription) {
