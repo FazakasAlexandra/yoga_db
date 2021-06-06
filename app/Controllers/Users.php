@@ -75,10 +75,16 @@ class Users extends BaseController
 
   public function usersNonAdm(){
     $usersModel = new UsersModel();
+    $nonAdminUsers = $usersModel->userClients();
+
+    foreach ($nonAdminUsers as &$user) {
+      $user['history'] = $usersModel->userClientsHistory($user['id']);
+    }
+
     return $this->respond([
       'status' => 201,
       'error' => null,
-      'data' => $usersModel->userClients()
+      'data' => $nonAdminUsers
     ]);
   }
 }

@@ -53,6 +53,7 @@ $routes->get('subscriptions/', 'Subscriptions::index');
 $routes->delete('subscriptions/(:any)', 'Subscriptions::deleteSubscription/$1');
 $routes->post('subscriptions', 'Subscriptions::addSubscription');
 
+$routes->get('clientshistory/client/(:any)', 'ClientsHistory::client/$1');
 
 $routes->get('schedules/(:any)/(:any)', 'SchedulesWeeks::index/$1/$2');
 $routes->get('schedules/latest', 'SchedulesWeeks::mostRecent');
