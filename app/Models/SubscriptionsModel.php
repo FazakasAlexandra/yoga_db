@@ -11,9 +11,13 @@ class SubscriptionsModel extends Model
         $db = \Config\Database::connect();
         $builder = $db->table($table);
 
-        $coverage = $builder->where(['id', $id])->get()->getRowObject();
+        $coverage = $builder->where('id', $id)->get()->getRowObject();
 
-        $builder->set('remained_entrences', +$coverage->remained_entrences - 1)->where(['id', $id])->update();
+        $remainedEntrences = +$coverage->remained_entrences - 1;
+
+        $builder->set('remained_entrences ', $remainedEntrences)->where('id', $id)->update();
+
+        return $remainedEntrences;
     }
     
     function getUserSubscriptions($userId)
