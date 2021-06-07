@@ -44,9 +44,9 @@ class SubscriptionsModel extends Model
         $subscriptions = $builder->get()->getResultArray();
 
         foreach ($subscriptions as &$subscription) {
-            $subscription['discounts'] = $this->getSubscriptionData($subscription['id'], 'discounts', 'subscription_id');
-            $subscription['free_entrences'] = $this->getSubscriptionData($subscription['id'], 'free_entrences', 'subscription_id');
-            $subscription['entrences'] = $this->getSubscriptionData($subscription['id'], 'entrences', 'subscription_id');
+            $subscription['discounts'] = $this->getSubscriptionData($subscription['id'], 'discounts_view', 'subscription_id');
+            $subscription['free_entrences'] = $this->getSubscriptionData($subscription['id'], 'free_entrences_view', 'subscription_id');
+            $subscription['entrences'] = $this->getSubscriptionData($subscription['id'], 'entrences_view', 'subscription_id');
         }
 
         return $subscriptions;
