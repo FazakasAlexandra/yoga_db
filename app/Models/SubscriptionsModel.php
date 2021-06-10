@@ -152,4 +152,60 @@ class SubscriptionsModel extends Model
 
         $builder->delete(['id' => $subscriptionId]);
     }
+
+    function getSubscriptionsForCombo(){
+        $db = \Config\Database::connect();
+        $query = $db->query("select subscriptions.id, subscriptions.name from subscriptions");
+        $results = [];
+        for($i = 0; $i < $query->getNumRows(); $i++){
+            $results[$i] = $query->getRowArray($i);
+        };
+        return $results;
+    }
+
+    function getSubscriptionsByUser($id){
+        $db = \Config\Database::connect();
+        $query = $db->query("select users_subscriptions.user_id, users_subscriptions.id as usersSubscriptionID, users.name, subscriptions.id as subscriptionID, subscriptions.name, subscriptions.attendences as subscriptionAttendances, users_subscriptions.expiration_date, SUM(users_subscriptions_entrences.remained_entrences) as remainedEntrances, SUM(users_subscriptions_free_entrences.remained_entrences) as remainedFreeEntrances, subscriptions.image from users_subscriptions left join subscriptions on users_subscriptions.subscription_id = subscriptions.id left join users on users.id = users_subscriptions.user_id left join users_subscriptions_entrences on users_subscriptions_entrences.user_subscription_id = users_subscriptions.id left join users_subscriptions_free_entrences on users_subscriptions_free_entrences.user_subscription_id = users_subscriptions.id where users_subscriptions.user_id = ". $id . " group by users_subscriptions.id");
+        $results = [];
+        for($i = 0; $i < $query->getNumRows(); $i++){
+            $results[$i] = $query->getRow($i);
+        };
+        return $results;
+    }
+
+    function getSubscriptionDetails($iduser){
+        $db = \Config\Database::connect();
+        $query = $db->query("select subscriptions.id, subscriptions.name, discounts_view.class_name, discounts_view.amount, discounts_view.class_type from subscriptions join discounts_view on subscriptions.id = discounts_view.subscription_id where subscriptions.id = ". $iduser);
+        $results = [];
+        for($i = 0; $i < $query->getNumRows(); $i++){
+            $results[$i] = $query->getRow($i);
+        };
+        return $results;
+    }
+
+    function addSubscriptionToUser($iduser, $idsubscription){
+        $db = \Config\Database::connect();
+        $query = $db->query("SELECT subscriptions.months from subscriptions where subscriptions.id = " . $idsubscription);
+
+        $subscriptionPeriod = $query->getRowArray();
+        $newdate = 'DATE_ADD(CURDATE(), INTERVAL ' . $subscriptionPeriod['months'] .' MONTH))';
+        $db->query("insert into `users_subscriptions` (`id`, `subscription_id`, `user_id`, `expiration_date`) VALUES (NULL, '". $idsubscription . "', '" . $iduser . "', " . $newdate);
+        $query1 = $db->query("select users_subscriptions.id from users_subscriptions order by id desc limit 1");
+        $query2 = $db->query("select entrences.id, entrences.amount from subscriptions join entrences on subscriptions.id = entrences.subscription_id where subscriptions.id = " . $idsubscription);
+        $query3 = $db->query("select free_entrences.id, free_entrences.amount from subscriptions join free_entrences on subscriptions.id = free_entrences.subscription_id where subscriptions.id = " . $idsubscription);
+
+        $newlyAddedUserSubID = $query1->getRowArray();
+        $dataAboutEntrances = $query2->getResultArray();    
+        $dataAboutFreeEntraces = $query3->getResultArray();
+
+        foreach($dataAboutEntrances as $row){
+            $db->query("insert into `users_subscriptions_entrences` (`user_subscription_id`, `entrences_id`, `id`, `remained_entrences`) values ('". $newlyAddedUserSubID['id'] ."', '". $row['id'] . "', NULL, '" . $row['amount'] . "')");
+        }
+
+        foreach($dataAboutFreeEntraces as $row){
+            $db->query("insert into `users_subscriptions_free_entrences` (`user_subscription_id`, `free_entrence_id`, `id`, `remained_entrences`) values ('". $newlyAddedUserSubID['id'] ."', '". $row['id'] . "', NULL, '" . $row['amount'] . "')");
+        }
+
+    }
+
 }

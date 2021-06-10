@@ -53,6 +53,8 @@ $routes->get('subscriptions/user/(:any)', 'Subscriptions::userSubscriptions/$1')
 $routes->get('subscriptions/', 'Subscriptions::index');
 $routes->delete('subscriptions/(:any)', 'Subscriptions::deleteSubscription/$1');
 $routes->post('subscriptions', 'Subscriptions::addSubscription');
+$routes->get('subscriptionnames', 'Subscriptions::getSubscriptionsNames');
+$routes->post('subscriptions/(:any)/(:any)', 'Subscriptions::addSubscriptionToUser/$1/$2');
 
 $routes->get('clientshistory/client/(:any)', 'ClientsHistory::client/$1');
 

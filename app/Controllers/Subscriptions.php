@@ -89,4 +89,43 @@ class Subscriptions extends BaseController
             "data" => $newSubscription
         ]);
     }
+
+    public function getSubscriptionsNames()
+    {
+        $subscriptionsModel = new SubscriptionsModel();
+        $data = $subscriptionsModel->getSubscriptionsForCombo();
+        return $this->respond([
+            'status' => 201,
+            'error' => null,
+            'message' => "Subscription added !",
+            "data" => $data
+        ]);
+    }
+
+    public function addSubscriptionToUser($iduser, $idsubscription){
+        $usersModel = new UsersModel();
+        $jwt = $this->request->getHeader('Authorization')->getValue();
+        $user = $usersModel->queryUser('jwt', $jwt);
+
+        if (!$user) {
+            return $this->respond([
+                'status' => 401,
+                'error' => 'Not authorized',
+                'data' => $jwt,
+                'user' => $user
+            ]);
+        }
+
+
+        $subscriptionsModel = new SubscriptionsModel();
+        $data = $subscriptionsModel->addSubscriptionToUser($iduser, $idsubscription);
+        
+        return $this->respond([
+            'status' => 201,
+            'error' => null,
+            'message' => "Subscription added !",
+            "data" => $data
+        ]);
+    }
+
 }
