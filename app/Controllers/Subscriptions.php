@@ -13,8 +13,12 @@ class Subscriptions extends BaseController
 
     public function decreaseSubscriptionCoverage($coverageType, $id){
         $subscriptionsModel = new SubscriptionsModel();
-        $subscriptionsModel->decreaseSubscriptionCoverage($coverageType, $id);
-
+        $remainedEntrences = $subscriptionsModel->decreaseSubscriptionCoverage($coverageType, $id);
+        return $this->respond([
+            'status' => 204,
+            'error' => null,
+            'data' => $remainedEntrences
+        ]);
     }
 
     public function userSubscriptions($userId){

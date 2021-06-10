@@ -11,9 +11,13 @@ class SubscriptionsModel extends Model
         $db = \Config\Database::connect();
         $builder = $db->table($table);
 
-        $coverage = $builder->where(['id', $id])->get()->getRowObject();
+        $coverage = $builder->where('id', $id)->get()->getRowObject();
 
-        $builder->set('remained_entrences', +$coverage->remained_entrences - 1)->where(['id', $id])->update();
+        $remainedEntrences = +$coverage->remained_entrences - 1;
+
+        $builder->set('remained_entrences ', $remainedEntrences)->where('id', $id)->update();
+
+        return $remainedEntrences;
     }
     
     function getUserSubscriptions($userId)
@@ -40,9 +44,9 @@ class SubscriptionsModel extends Model
         $subscriptions = $builder->get()->getResultArray();
 
         foreach ($subscriptions as &$subscription) {
-            $subscription['discounts'] = $this->getSubscriptionData($subscription['id'], 'discounts', 'subscription_id');
-            $subscription['free_entrences'] = $this->getSubscriptionData($subscription['id'], 'free_entrences', 'subscription_id');
-            $subscription['entrences'] = $this->getSubscriptionData($subscription['id'], 'entrences', 'subscription_id');
+            $subscription['discounts'] = $this->getSubscriptionData($subscription['id'], 'discounts_view', 'subscription_id');
+            $subscription['free_entrences'] = $this->getSubscriptionData($subscription['id'], 'free_entrences_view', 'subscription_id');
+            $subscription['entrences'] = $this->getSubscriptionData($subscription['id'], 'entrences_view', 'subscription_id');
         }
 
         return $subscriptions;
