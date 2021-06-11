@@ -13,7 +13,18 @@ class ClassesModel extends Model
         $db = \Config\Database::connect();
         $builder = $db->table('classes');
 
-        return $builder->get()->getResultArray();
+        $classes = $builder->get()->getResultArray();
+        foreach ($classes as &$yogaClass) {
+            $yogaClass['attendences'] = $this->countSingleClassAttendences($yogaClass['id']);
+        }
+        return $classes;
+    }
+    
+    function countSingleClassAttendences($classId){
+        $db = \Config\Database::connect();
+        $builder = $db->table('bookings_view');
+        $attendences = $builder->where('class_id', $classId)->where('state', 'present')->get()->getResultArray();
+        return count($attendences);
     }
 
     function getClassesAttendences(){

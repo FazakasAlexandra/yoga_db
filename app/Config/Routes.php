@@ -56,6 +56,7 @@ $routes->post('subscriptions', 'Subscriptions::addSubscription');
 
 $routes->get('clientshistory/client/(:any)', 'ClientsHistory::client/$1');
 
+$routes->put('schedules/links/classes/(:any)/(:any)', 'Classes::updateScheduledClassLink/$1/$2');
 $routes->get('schedules/(:any)/(:any)', 'SchedulesWeeks::index/$1/$2');
 $routes->get('schedules/latest', 'SchedulesWeeks::mostRecent');
 $routes->post('schedules', 'SchedulesWeeks::postWeekSchedule');

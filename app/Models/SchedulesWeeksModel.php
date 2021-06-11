@@ -27,7 +27,9 @@ class SchedulesWeeksModel extends Model
                         'class_id' => $schedule['class_id'],
                         'id' => uniqid(),
                         "schedules_weeks_id" => $schedule['schedules_weeks_id'],
+                        "schedule_day_id" => $schedule['schedule_day_id'],
                         "hour" => $schedule['hour'],
+                        "link" => $schedule['link'],
                         "name" => $schedule['class_name'],
                         "description" => $schedule['class_description'],
                         "level" => $schedule['class_level'],
@@ -59,7 +61,8 @@ class SchedulesWeeksModel extends Model
         return $this->formatData($builder->get()->getResultArray());
     }
 
-    function insertWeekSchedule($weekSchedule) {
+    function insertWeekSchedule($weekSchedule)
+    {
         $db = \Config\Database::connect();
         $builder = $db->table('schedules_weeks');
 

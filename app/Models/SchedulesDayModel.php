@@ -22,4 +22,11 @@ class SchedulesDayModel extends Model
 
         return $builder->where('date_day =', $date)->get()->getResultArray();
     }
+
+    function updateClassLink($scheduleDayId, $link){
+        $db = \Config\Database::connect();
+        $builder = $db->table('schedules_day');
+
+        $builder->set('link', $link)->where('id', $scheduleDayId)->update();
+    }
 }
