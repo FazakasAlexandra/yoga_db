@@ -99,9 +99,8 @@ class Subscriptions extends BaseController
         $subscriptionsModel = new SubscriptionsModel();
         $data = $subscriptionsModel->getSubscriptionsForCombo();
         return $this->respond([
-            'status' => 201,
+            'status' => 200,
             'error' => null,
-            'message' => "Subscription added !",
             "data" => $data
         ]);
     }

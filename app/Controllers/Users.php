@@ -74,7 +74,8 @@ class Users extends BaseController
     return $usersModel->queryUser($key, $value);
   }
 
-  public function usersNonAdm(){
+  public function usersNonAdm()
+  {
     $usersModel = new UsersModel();
     $subsModel = new SubscriptionsModel();
 
@@ -84,10 +85,9 @@ class Users extends BaseController
       $user['history'] = $usersModel->userClientsHistory($user['id']);
       $user['user_subscriptions'] = $subsModel->getSubscriptionsByUser($user['id']);
 
-      foreach($user['user_subscriptions'] as $sub) {
-        $disc = $subsModel->getSubscriptionDetails($sub->subscriptionID);
-        $sub->discounts = $disc;
-       }
+      foreach ($user['history'] as &$history) {
+        $history['user_subscriptions'] = $subsModel->getUserSubscriptionByClass($user['id'], $history['classes_id']);
+      }
     }
 
     return $this->respond([
@@ -95,6 +95,5 @@ class Users extends BaseController
       'error' => null,
       'data' => $nonAdminUsers
     ]);
-  
-}
+  }
 }
