@@ -82,18 +82,18 @@ class Users extends BaseController
     $nonAdminUsers = $usersModel->userClients();
 
     foreach ($nonAdminUsers as &$user) {
-      $user['history'] = $usersModel->userClientsHistory($user['id']);
-
-      foreach ($user['history'] as &$userHistory) {
-        $userHistory['userSubscriptions'] = $subsModel->getUserSubscriptionByClass($user['id'], $userHistory['classes_id']);
-      }
-
-      $user['user_subscriptions'] = $subsModel->getSubscriptionsByUser($user['id']);
-      
+      $user['history'] = $usersModel->userClientsHistory($user['id']);      
 
       foreach ($user['history'] as &$history) {
         $history['user_subscriptions'] = $subsModel->getUserSubscriptionByClass($user['id'], $history['classes_id']);
       }
+
+      $user['user_subscriptions'] = $subsModel->getSubscriptionsByUser($user['id']);
+
+      foreach($user['user_subscriptions'] as $sub) {
+        $disc = $subsModel->getSubscriptionDetails($sub->subscriptionID);
+        $sub->discounts = $disc;
+       }
     }
 
     return $this->respond([
