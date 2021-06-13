@@ -5,6 +5,7 @@ namespace App\Controllers;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\ClassesModel;
 use App\Models\SchedulesDayModel;
+use App\Models\UsersModel;
 use CodeIgniter\HTTP\RequestInterface;
 
 class Classes extends BaseController
@@ -59,4 +60,29 @@ class Classes extends BaseController
         ]);
     }
 
+    public function addClass(){
+        $usersModel = new UsersModel();
+        $jwt = $this->request->getHeader('Authorization')->getValue();
+        $user = $usersModel->queryUser('jwt', $jwt);
+
+        if (!$user) {
+            return $this->respond([
+                'status' => 401,
+                'error' => 'Not authorized'
+            ]);
+        }
+
+        $classesModel = new ClassesModel();
+        $data = $this->request->getJSON('true');
+        $newClass = $classesModel->addNewClass($data);
+        
+        return $this->respond([
+            'status' => 201,
+            'error' => null,
+            'message' => "Class added!",
+            "data" => $data
+        ]);
+    }
 }
+
+
