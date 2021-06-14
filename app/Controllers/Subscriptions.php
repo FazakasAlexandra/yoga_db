@@ -31,6 +31,27 @@ class Subscriptions extends BaseController
         ]);
     }
 
+    public function removeUserSubscription($userSubscriptionId){
+        $usersModel = new UsersModel();
+        $jwt = $this->request->getHeader('Authorization');
+
+        if(!$jwt || !$usersModel->isUserAuthorized($jwt->getValue())){
+            return $this->respond([
+                'status' => 401,
+                'error' => 'Not authorized'
+            ]);
+        }
+
+        $subscriptionsModel = new SubscriptionsModel();
+        $subscriptionsModel->removeUserSubscription($userSubscriptionId);
+
+        return $this->respond([
+            'status' => 200,
+            'error' => null,
+            'message' => 'Subscription successfully removed !' 
+        ]);
+    }
+
     public function getUserSubscriptionByClass($userid, $classid){
         $subscriptionsModel = new SubscriptionsModel();
         $data = $subscriptionsModel->getUserSubscriptionByClass($userid, $classid);
