@@ -10,12 +10,14 @@ class UsersModel extends Model
     protected $allowedFields = ['name', 'email', 'jwt', 'is_admin'];
     protected $table = 'users';
 
-    public function isUserAuthorized($jwt)
+    public function isUserAuthorized($jwtHeader)
     {
-        $user = $this->queryUser('jwt', $jwt);
+        if(!$jwtHeader) return false;
 
-        // FIX ME should also check if use is admin
-        if (!$user) return false;
+        $user = $this->queryUser('jwt', $jwtHeader->getValue());
+
+        if (!$user || $user->is_admin !== 'true') return false;
+
         return true;
     }
 

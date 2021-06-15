@@ -12,6 +12,11 @@ class Bookings extends BaseController
 {
     use ResponseTrait;
 
+    public $notAuthorized = [
+        'status' => 401,
+        'error' => 'Not authorized'
+    ];
+
     public function __construct()
     {
         $this->request = \Config\Services::request();
@@ -21,7 +26,8 @@ class Bookings extends BaseController
     {
     }
 
-    public function getClassBookings($weekScheduleId){
+    public function getClassBookings($weekScheduleId)
+    {
         $bookingsModel = new BookingsModel();
 
         return $this->setResponseFormat('json')->respond([
@@ -34,16 +40,13 @@ class Bookings extends BaseController
     public function postBooking($weekScheduleId, $classType)
     {
         $usersModel = new UsersModel();
-        $jwt = $this->request->getHeader('Authorization')->getValue();
-        $user = $usersModel->queryUser('jwt', $jwt);
+        $jwt = $this->request->getHeader('Authorization');
 
-        if (!$user) {
-            return $this->respond([
-                'status' => 401,
-                'error' => 'Not authorized'
-            ]);
+        if (!$usersModel->isUserAuthorized($jwt)) {
+            return $this->respond($this->notAuthorized);
         }
 
+        $user = $usersModel->queryUser('jwt', $jwt->getValue());
         $bookingsModel = new BookingsModel();
         $bookingsModel->insertBooking($user->id, $weekScheduleId, $classType);
 
@@ -71,15 +74,10 @@ class Bookings extends BaseController
     public function chgStatus($id, $status)
     {
         $usersModel = new UsersModel();
-        $jwt = $this->request->getHeader('Authorization')->getValue();
-        $user = $usersModel->queryUser('jwt', $jwt);
+        $jwt = $this->request->getHeader('Authorization');
 
-        if (!$user) {
-            return $this->respond([
-                'status' => 401,
-                'jwt' => $jwt,
-                'error' => 'Not authorized'
-            ]);
+        if (!$usersModel->isUserAuthorized($jwt)) {
+            return $this->respond($this->notAuthorized);
         }
 
         $bookingsModel = new BookingsModel();
@@ -93,8 +91,8 @@ class Bookings extends BaseController
         //     'class_type' => $class_type,
         //     'state' => $status,
         // ];
-        
-		if(!empty($status) ){
+
+        if (!empty($status)) {
             $bookingsModel->updateBookingStatus($id, $status);
         }
 
