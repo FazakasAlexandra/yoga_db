@@ -12,21 +12,29 @@ class Classes extends BaseController
 {
     use ResponseTrait;
 
-    public function __construct(){
+    public $notAuthorized = [
+        'status' => 401,
+        'error' => 'Not authorized'
+    ];
+
+    public function __construct()
+    {
         $this->request = \Config\Services::request();
     }
 
-    public function index(){
+    public function index()
+    {
         $classesModel = new ClassesModel();
 
         return $this->respond([
-        'status' => 201,
-        'error' => null,
-        'data' => $classesModel->getClasses()
+            'status' => 201,
+            'error' => null,
+            'data' => $classesModel->getClasses()
         ]);
     }
 
-    public function updateScheduledClassLink($scheduleDayId, $link){
+    public function updateScheduledClassLink($scheduleDayId, $link)
+    {
         $schedulesDayModel = new SchedulesDayModel();
         $schedulesDayModel->updateClassLink($scheduleDayId, $link);
         return $this->respond([
@@ -36,13 +44,14 @@ class Classes extends BaseController
         ]);
     }
 
-    public function dltClass($id){
+    public function dltClass($id)
+    {
         $classesModel = new ClassesModel();
-		$class = $classesModel->find($id);
-		if ($class) {
-			$classesModel->delete($id);
-		};
-		
+        $class = $classesModel->find($id);
+        if ($class) {
+            $classesModel->delete($id);
+        };
+
         return $this->respond([
             'status' => 201,
             'error' => null,
@@ -50,7 +59,8 @@ class Classes extends BaseController
         ]);
     }
 
-    public function attendences(){
+    public function attendences()
+    {
         $classesModel = new ClassesModel();
 
         return $this->respond([
@@ -60,22 +70,18 @@ class Classes extends BaseController
         ]);
     }
 
-    public function addClass(){
+    public function addClass()
+    {
         $usersModel = new UsersModel();
-        $jwt = $this->request->getHeader('Authorization')->getValue();
-        $user = $usersModel->queryUser('jwt', $jwt);
 
-        if (!$user) {
-            return $this->respond([
-                'status' => 401,
-                'error' => 'Not authorized'
-            ]);
+        if (!$usersModel->isUserAuthorized($this->request->getHeader('Authorization'))) {
+            return $this->respond($this->notAuthorized);
         }
 
         $classesModel = new ClassesModel();
         $data = $this->request->getJSON('true');
         $newClass = $classesModel->addNewClass($data);
-        
+
         return $this->respond([
             'status' => 201,
             'error' => null,
@@ -84,5 +90,3 @@ class Classes extends BaseController
         ]);
     }
 }
-
-

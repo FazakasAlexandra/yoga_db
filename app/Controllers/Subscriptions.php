@@ -11,6 +11,11 @@ class Subscriptions extends BaseController
 {
     use ResponseTrait;
 
+    public $notAuthorized = [
+        'status' => 401,
+        'error' => 'Not authorized'
+    ];
+
     public function decreaseSubscriptionCoverage($coverageType, $id){
         $subscriptionsModel = new SubscriptionsModel();
         $remainedEntrences = $subscriptionsModel->decreaseSubscriptionCoverage($coverageType, $id);
@@ -28,6 +33,23 @@ class Subscriptions extends BaseController
             'status' => 200,
             'error' => null,
             'data' => $subscriptionsModel->getUserSubscriptions($userId)
+        ]);
+    }
+
+    public function removeUserSubscription($userSubscriptionId){
+        $usersModel = new UsersModel();
+
+        if(!$usersModel->isUserAuthorized($this->request->getHeader('Authorization'))){
+            return $this->respond($this->notAuthorized);
+        }
+
+        $subscriptionsModel = new SubscriptionsModel();
+        $subscriptionsModel->removeUserSubscription($userSubscriptionId);
+
+        return $this->respond([
+            'status' => 200,
+            'error' => null,
+            'message' => 'Subscription successfully removed !' 
         ]);
     }
 
@@ -72,14 +94,9 @@ class Subscriptions extends BaseController
     public function addSubscription()
     {
         $usersModel = new UsersModel();
-        $jwt = $this->request->getHeader('Authorization')->getValue();
-        $user = $usersModel->queryUser('jwt', $jwt);
 
-        if (!$user) {
-            return $this->respond([
-                'status' => 401,
-                'error' => 'Not authorized'
-            ]);
+        if(!$usersModel->isUserAuthorized($this->request->getHeader('Authorization'))){
+            return $this->respond($this->notAuthorized);
         }
 
         $subscriptionsModel = new SubscriptionsModel();
@@ -107,18 +124,10 @@ class Subscriptions extends BaseController
 
     public function addSubscriptionToUser($iduser, $idsubscription){
         $usersModel = new UsersModel();
-        $jwt = $this->request->getHeader('Authorization')->getValue();
-        $user = $usersModel->queryUser('jwt', $jwt);
 
-        if (!$user) {
-            return $this->respond([
-                'status' => 401,
-                'error' => 'Not authorized',
-                'data' => $jwt,
-                'user' => $user
-            ]);
+        if(!$usersModel->isUserAuthorized($this->request->getHeader('Authorization'))){
+            return $this->respond($this->notAuthorized);
         }
-
 
         $subscriptionsModel = new SubscriptionsModel();
         $data = $subscriptionsModel->addSubscriptionToUser($iduser, $idsubscription);

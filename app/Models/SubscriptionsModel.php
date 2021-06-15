@@ -81,6 +81,13 @@ class SubscriptionsModel extends Model
         return $subscriptionData;
     }
 
+    function removeUserSubscription($userSubscriptionId){
+        $db = \Config\Database::connect();
+        $builder = $db->table('users_subscriptions');
+
+        $builder->delete(['id' => $userSubscriptionId]);
+    }
+
     function checkSubscriptionData($subscription, $classId, $type)
     {
         $data = array();

@@ -40,40 +40,44 @@ POST
     -> insert a single user
 */
 
+// users routes
 $routes->group('users', function ($routes) {
 	$routes->get('/', 'Users::index');
 	$routes->post('/', 'Users::post');
 });
 $routes->get('users/(:any)/(:any)', 'Users::getUser/$1/$2');
 $routes->get('users/clients', 'Users::usersNonAdm');
+$routes->get('clientshistory/client/(:any)', 'ClientsHistory::client/$1');
 
+// subscriptions routes related to users
 $routes->get('subscriptions/decrease/(:any)/(:any)', 'Subscriptions::decreaseSubscriptionCoverage/$1/$2');
 $routes->get('subscriptions/user/(:any)/class/(:any)', 'Subscriptions::getUserSubscriptionByClass/$1/$2');
 $routes->get('subscriptions/user/(:any)', 'Subscriptions::userSubscriptions/$1');
+$routes->delete('subscriptions/user/(:any)', 'Subscriptions::removeUserSubscription/$1');
+
+// subscriptions routes
 $routes->get('subscriptions/', 'Subscriptions::index');
 $routes->delete('subscriptions/(:any)', 'Subscriptions::deleteSubscription/$1');
 $routes->post('subscriptions', 'Subscriptions::addSubscription');
 $routes->get('subscriptionnames', 'Subscriptions::getSubscriptionsNames');
 $routes->post('subscriptions/(:any)/(:any)', 'Subscriptions::addSubscriptionToUser/$1/$2');
 
-$routes->get('clientshistory/client/(:any)', 'ClientsHistory::client/$1');
-
+// schedules routes
 $routes->put('schedules/links/classes/(:any)/(:any)', 'Classes::updateScheduledClassLink/$1/$2');
 $routes->get('schedules/(:any)/(:any)', 'SchedulesWeeks::index/$1/$2');
 $routes->get('schedules/latest', 'SchedulesWeeks::mostRecent');
 $routes->post('schedules', 'SchedulesWeeks::postWeekSchedule');
+$routes->get('classes/date/(:any)', 'SchedulesWeeks::getDaySchedule/$1'); // gets all classes for one day by date
 
+// bookings routes
 $routes->post('bookings/(:any)/(:any)', 'Bookings::postBooking/$1/$2');
-
 $routes->post('bookings/(:any)/(:any)', 'Bookings::postBooking/$1/$2');
 //$routes->match(['post'], 'chgstatus/(:any)/(:any)', 'Bookings::chgStatus/$1/$2');
 $routes->get('chgstatus/(:any)/(:any)', 'Bookings::chgStatus/$1/$2');
 //$routes->get('bookings/(:any)', 'Bookings::getBooking/$1');
 
-// gets all classes for one day by date
-$routes->get('classes/date/(:any)', 'SchedulesWeeks::getDaySchedule/$1');
-// gets all bookings for one class based on schedule_weeks_id
-$routes->get('classes/bookings/(:any)', 'Bookings::getClassBookings/$1');
+// classes routes
+$routes->get('classes/bookings/(:any)', 'Bookings::getClassBookings/$1'); // gets all bookings for one class based on schedule_weeks_id
 $routes->get('classes', 'Classes::index');
 $routes->post('classes/newclass', 'Classes::addClass');
 $routes->get('classes/attendences', 'Classes::attendences');

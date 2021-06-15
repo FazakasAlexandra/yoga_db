@@ -12,14 +12,20 @@ class SchedulesWeeks extends BaseController
 {
   use ResponseTrait;
 
+  public $notAuthorized = [
+    'status' => 401,
+    'error' => 'Not authorized'
+  ];
+
   public function __construct()
   {
     $this->request = \Config\Services::request();
   }
 
-  public function getDaySchedule($date){
+  public function getDaySchedule($date)
+  {
     $schedulesDayModel = new SchedulesDayModel();
-    
+
     return $this->respond([
       'status' => 200,
       'error' => null,
@@ -49,19 +55,14 @@ class SchedulesWeeks extends BaseController
     ]);
   }
 
-  public function postWeekSchedule(){
+  public function postWeekSchedule()
+  {
     $usersModel = new UsersModel();
     $schedulesDayModel = new schedulesDayModel();
     $schedulesWeekModel = new SchedulesWeeksModel();
 
-    $jwt = $this->request->getHeader('Authorization')->getValue();
-    $user = $usersModel->queryUser('jwt', $jwt);
-
-    if (!$user || $user->is_admin == 'false') {
-        return $this->respond([
-            'status' => 401,
-            'error' => 'Not authorized',
-        ]);
+    if (!$usersModel->isUserAuthorized($this->request->getHeader('Authorization'))) {
+      return $this->respond($this->notAuthorized);
     }
 
     $weekSchedule = $this->request->getJSON('true');
