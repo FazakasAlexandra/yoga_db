@@ -76,6 +76,7 @@ $routes->get('classes/date/(:any)', 'SchedulesWeeks::getDaySchedule/$1');
 // gets all bookings for one class based on schedule_weeks_id
 $routes->get('classes/bookings/(:any)', 'Bookings::getClassBookings/$1');
 $routes->get('classes', 'Classes::index');
+$routes->post('classes/newclass', 'Classes::addClass');
 $routes->get('classes/attendences', 'Classes::attendences');
 $routes->get('classes/dlt/(:any)', 'Classes::dltClass/$1');
 /*

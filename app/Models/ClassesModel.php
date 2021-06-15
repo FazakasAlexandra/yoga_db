@@ -33,4 +33,9 @@ class ClassesModel extends Model
 
         return $builder->get()->getResultArray();
     }
+
+    function addNewClass($data){
+        $db = \Config\Database::connect();
+        $db->query("insert into `classes` (`id`, `name`, `description`, `level`, `online_price`, `offline_price`) VALUES (NULL, '". $data['name'] . "', '" . $data['description'] . "', '" . $data['level'] . "', '" . $data['online'] . "', '" . $data['offline'] . "')");
+    }
 }
