@@ -181,7 +181,6 @@ class SubscriptionsModel extends Model
         for($i = 0; $i < $query->getNumRows(); $i++){
             $results[$i] = $query->getRow($i);
         };
-        //foreach()
         return $results;
     }
 
@@ -211,7 +210,7 @@ class SubscriptionsModel extends Model
 
     function addSubscriptionToUser($iduser, $idsubscription){
         $db = \Config\Database::connect();
-        $query = $db->query("SELECT subscriptions.months from subscriptions where subscriptions.id = " . $idsubscription);
+        $query = $db->query("select subscriptions.months from subscriptions where subscriptions.id = " . $idsubscription);
 
         $subscriptionPeriod = $query->getRowArray();
         $newdate = 'DATE_ADD(CURDATE(), INTERVAL ' . $subscriptionPeriod['months'] .' MONTH))';
