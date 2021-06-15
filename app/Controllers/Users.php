@@ -92,7 +92,11 @@ class Users extends BaseController
 
       foreach($user['user_subscriptions'] as $sub) {
         $disc = $subsModel->getSubscriptionDetails($sub->subscriptionID);
+        $entrancesdetails = $subsModel->getSubscriptionsEntrances($sub->usersSubscriptionID);
+        $freeentrancesdetails = $subsModel->getSubscriptionsFreeEntrances($sub->usersSubscriptionID);
         $sub->discounts = $disc;
+        $sub->entrances = $entrancesdetails;
+        $sub->free_entrances = $freeentrancesdetails;
        }
     }
 

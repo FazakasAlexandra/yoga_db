@@ -169,11 +169,12 @@ class SubscriptionsModel extends Model
 
     function getSubscriptionsByUser($id){
         $db = \Config\Database::connect();
-        $query = $db->query("select users_subscriptions.user_id, users_subscriptions.id as usersSubscriptionID, users.name, subscriptions.id as subscriptionID, subscriptions.name, subscriptions.attendences as subscriptionAttendances, users_subscriptions.expiration_date, SUM(users_subscriptions_entrences.remained_entrences) as remainedEntrances, SUM(users_subscriptions_free_entrences.remained_entrences) as remainedFreeEntrances, subscriptions.image from users_subscriptions left join subscriptions on users_subscriptions.subscription_id = subscriptions.id left join users on users.id = users_subscriptions.user_id left join users_subscriptions_entrences on users_subscriptions_entrences.user_subscription_id = users_subscriptions.id left join users_subscriptions_free_entrences on users_subscriptions_free_entrences.user_subscription_id = users_subscriptions.id where users_subscriptions.user_id = ". $id . " group by users_subscriptions.id");
+        $query = $db->query("select users_subscriptions.user_id, users_subscriptions.id as usersSubscriptionID, users.name, subscriptions.id as subscriptionID, subscriptions.name, users_subscriptions.expiration_date, subscriptions.image from users_subscriptions left join subscriptions on users_subscriptions.subscription_id = subscriptions.id left join users on users.id = users_subscriptions.user_id where users_subscriptions.user_id = ". $id);
         $results = [];
         for($i = 0; $i < $query->getNumRows(); $i++){
             $results[$i] = $query->getRow($i);
         };
+        //foreach()
         return $results;
     }
 
@@ -184,6 +185,20 @@ class SubscriptionsModel extends Model
         for($i = 0; $i < $query->getNumRows(); $i++){
             $results[$i] = $query->getRow($i);
         };
+        return $results;
+    }
+
+    function getSubscriptionsEntrances($id){
+        $db = \Config\Database::connect();
+        $query = $db->query("select users_subs_ent_view.class_name, users_subs_ent_view.class_type, users_subs_ent_view.remained_entrences as remained_entrances from users_subscriptions join users_subs_ent_view on users_subscriptions.id = users_subs_ent_view.user_subscription_id where users_subscriptions.id = ". $id);
+        $results = $query->getResult();
+        return $results;
+    }
+
+    function getSubscriptionsFreeEntrances($id){
+        $db = \Config\Database::connect();
+        $query = $db->query("select users_subs_free_ent_view.class_name, users_subs_free_ent_view.class_type, users_subs_free_ent_view.remained_entrences as remained_entrances from users_subscriptions join users_subs_free_ent_view on users_subscriptions.id = users_subs_free_ent_view.user_subscription_id where users_subscriptions.id = ". $id);
+        $results = $query->getResult();
         return $results;
     }
 
