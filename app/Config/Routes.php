@@ -47,7 +47,7 @@ $routes->group('users', function ($routes) {
 });
 $routes->get('users/(:any)/(:any)', 'Users::getUser/$1/$2');
 $routes->get('users/clients', 'Users::usersNonAdm');
-$routes->get('clientshistory/client/(:any)', 'ClientsHistory::client/$1');
+//$routes->get('clientshistory/client/(:any)', 'ClientsHistory::client/$1');
 
 // subscriptions routes related to users
 $routes->get('subscriptions/decrease/(:any)/(:any)', 'Subscriptions::decreaseSubscriptionCoverage/$1/$2');
@@ -72,7 +72,6 @@ $routes->get('classes/date/(:any)', 'SchedulesWeeks::getDaySchedule/$1'); // get
 // bookings routes
 $routes->post('bookings/(:any)/(:any)', 'Bookings::postBooking/$1/$2');
 $routes->post('bookings/(:any)/(:any)', 'Bookings::postBooking/$1/$2');
-//$routes->match(['post'], 'chgstatus/(:any)/(:any)', 'Bookings::chgStatus/$1/$2');
 $routes->get('chgstatus/(:any)/(:any)', 'Bookings::chgStatus/$1/$2');
 //$routes->get('bookings/(:any)', 'Bookings::getBooking/$1');
 
