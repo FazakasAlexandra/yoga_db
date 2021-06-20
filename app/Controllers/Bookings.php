@@ -73,36 +73,27 @@ class Bookings extends BaseController
 
     public function chgStatus($id, $status)
     {
-        $usersModel = new UsersModel();
-        $jwt = $this->request->getHeader('Authorization');
+        if($status != 'canceled'){
+            $usersModel = new UsersModel();
+            $jwt = $this->request->getHeader('Authorization');
 
-        if (!$usersModel->isUserAuthorized($jwt)) {
-            return $this->respond($this->notAuthorized);
+            if (!$usersModel->isUserAuthorized($jwt)) {
+                return $this->respond($this->notAuthorized);
+            }
         }
 
         $bookingsModel = new BookingsModel();
         $booking = $bookingsModel->getBooking($id);
-        // $schedules_weeks_id = $booking[0]['schedules_weeks_id'];
-        // $class_type = $booking[0]['class_type'];
-        // $data = [
-        //     'id' => $id,
-        //     'user_id'  => $user->id,
-        //     'schedules_weeks_id'  => $schedules_weeks_id,
-        //     'class_type' => $class_type,
-        //     'state' => $status,
-        // ];
-
         if (!empty($status)) {
             $bookingsModel->updateBookingStatus($id, $status);
         }
-
         $newbooking = $bookingsModel->getBooking($id);
-
         return $this->setResponseFormat('json')->respond([
             'status' => 201,
-            'error' => 'suntem aici',
+            'error' => null,
+            'message' => 'Status successfully modified!',
             'data' => [
-                'message' => 'cstatus successfully modified!'
+                'newbooking' => $newbooking
             ]
         ], 201);
     }
