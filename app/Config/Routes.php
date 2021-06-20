@@ -71,7 +71,6 @@ $routes->get('classes/date/(:any)', 'SchedulesWeeks::getDaySchedule/$1'); // get
 
 // bookings routes
 $routes->post('bookings/(:any)/(:any)', 'Bookings::postBooking/$1/$2');
-$routes->post('bookings/(:any)/(:any)', 'Bookings::postBooking/$1/$2');
 //$routes->match(['post'], 'chgstatus/(:any)/(:any)', 'Bookings::chgStatus/$1/$2');
 $routes->get('chgstatus/(:any)/(:any)', 'Bookings::chgStatus/$1/$2');
 //$routes->get('bookings/(:any)', 'Bookings::getBooking/$1');

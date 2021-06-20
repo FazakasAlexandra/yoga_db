@@ -31,7 +31,7 @@ class Bookings extends BaseController
         $bookingsModel = new BookingsModel();
 
         return $this->setResponseFormat('json')->respond([
-            'status' => 201,
+            'status' => 200,
             'error' => null,
             'data' => $bookingsModel->getClassBookings($weekScheduleId)
         ]);
@@ -42,8 +42,8 @@ class Bookings extends BaseController
         $usersModel = new UsersModel();
         $jwt = $this->request->getHeader('Authorization');
 
-        if (!$usersModel->isUserAuthorized($jwt)) {
-            return $this->respond($this->notAuthorized);
+        if (!$usersModel->queryUser('jwt', $jwt->getValue())) {
+            return $this->respond($this->notAuthorized, 401);
         }
 
         $user = $usersModel->queryUser('jwt', $jwt->getValue());
@@ -56,7 +56,7 @@ class Bookings extends BaseController
             'data' => [
                 'message' => 'class successfully booked !'
             ]
-        ]);
+        ], 201);
     }
 
     // public function getBooking($id){
@@ -104,6 +104,6 @@ class Bookings extends BaseController
             'data' => [
                 'message' => 'cstatus successfully modified!'
             ]
-        ]);
+        ], 201);
     }
 }
