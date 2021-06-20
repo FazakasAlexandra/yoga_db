@@ -26,11 +26,31 @@ class BookingsModel extends Model
         return $db->insertID();
     }
 
+    function checkExistingBooking($userId, $schedulesWeeksId){
+        $db = \Config\Database::connect();
+        $builder = $db->table('bookings');
+
+        return $builder
+        ->where('user_id', $userId)
+        ->where('schedules_weeks_id', $schedulesWeeksId)
+        ->get()
+        ->getRowObject();
+    }
+
+    function updateBooking($id, $classType, $state = 'pending'){
+        $db = \Config\Database::connect();
+        $builder = $db->table('bookings');
+        $builder->update([
+            'state' => $state,
+            'class_type' => $classType
+        ], 'id ='. $id);
+    }
+
     function getUserBookings($userId){
         $db = \Config\Database::connect();
         $builder = $db->table('bookings');
 
-        $userBookingsIds = $builder->where('user_id', $userId)->select('schedules_weeks_id')->get()->getResult('array');
+        $userBookingsIds = $builder->where('user_id', $userId)->where('state !=', 'canceled')->select('schedules_weeks_id')->get()->getResult('array');
         $result = array();
         foreach ($userBookingsIds as $booking) {
             array_push($result, $booking['schedules_weeks_id']);
@@ -65,6 +85,6 @@ class BookingsModel extends Model
     
     function updateBookingStatus($id, $status){
         $db = \Config\Database::connect();
-        return $query = $db->query("UPDATE bookings SET state = '" . $status . "' WHERE bookings.id = " . $id . " ");
+        return $db->query("UPDATE bookings SET state = '" . $status . "' WHERE bookings.id = " . $id . " ");
     }
 }

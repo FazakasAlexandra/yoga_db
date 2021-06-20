@@ -48,8 +48,16 @@ class Bookings extends BaseController
 
         $user = $usersModel->queryUser('jwt', $jwt->getValue());
         $bookingsModel = new BookingsModel();
-        $bookingsModel->insertBooking($user->id, $weekScheduleId, $classType);
 
+        $existingBooking = $bookingsModel->checkExistingBooking($user->id, $weekScheduleId);
+
+        // If booking for a class has been canceled and then booked again, just update it. Don't insert new one
+        if($existingBooking){
+            $bookingsModel->updateBooking($existingBooking->id, $classType);
+        } else {
+            $bookingsModel->insertBooking($user->id, $weekScheduleId, $classType);
+        }
+        
         return $this->setResponseFormat('json')->respond([
             'status' => 201,
             'error' => null,
