@@ -80,6 +80,7 @@ $routes->get('classes/bookings/(:any)', 'Bookings::getClassBookings/$1'); // get
 $routes->get('classes', 'Classes::index');
 $routes->post('classes/newclass', 'Classes::addClass');
 $routes->get('classes/attendences', 'Classes::attendences');
+$routes->get('classes/dailyattendences/(:any)', 'Classes::dailyAttendances/$1');
 $routes->get('classes/dlt/(:any)', 'Classes::dltClass/$1');
 /*
  * --------------------------------------------------------------------

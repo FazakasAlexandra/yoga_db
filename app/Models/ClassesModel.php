@@ -34,6 +34,21 @@ class ClassesModel extends Model
         return $builder->get()->getResultArray();
     }
 
+    function getDailyPresence($id){
+        $db = \Config\Database::connect();
+        $builder = $db->table('classes_daily_attendences');
+        
+        if($id == 'all') 
+        {
+            $attendences = $builder->orderBy('date_day', 'ASC')->get()->getResultArray();
+        }else
+        {   
+            $attendences = $builder->where('class_id', $id)->orderBy('date_day', 'ASC')->get()->getResultArray();
+        }
+        
+        return $attendences;
+    }
+
     function addNewClass($data){
         $db = \Config\Database::connect();
         $db->query("insert into `classes` (`id`, `name`, `description`, `level`, `online_price`, `offline_price`) VALUES (NULL, '". $data['name'] . "', '" . $data['description'] . "', '" . $data['level'] . "', '" . $data['online'] . "', '" . $data['offline'] . "')");
