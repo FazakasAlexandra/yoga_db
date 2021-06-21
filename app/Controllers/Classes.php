@@ -70,6 +70,17 @@ class Classes extends BaseController
         ]);
     }
 
+    public function dailyAttendances($id)
+    {
+        $classesModel = new ClassesModel();
+
+        return $this->respond([
+            'status' => 201,
+            'error' => null,
+            'data' => $classesModel->getDailyPresence($id)
+        ]);
+    }
+
     public function addClass()
     {
         $usersModel = new UsersModel();
