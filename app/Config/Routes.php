@@ -63,10 +63,10 @@ $routes->get('subscriptionnames', 'Subscriptions::getSubscriptionsNames');
 $routes->post('subscriptions/(:any)/(:any)', 'Subscriptions::addSubscriptionToUser/$1/$2');
 
 // schedules routes
-$routes->put('schedules/links/classes/(:any)/(:any)', 'Classes::updateScheduledClassLink/$1/$2');
+$routes->put('schedules/links/classes/(:any)/(:any)', 'SchedulesWeeks::updateScheduledClassLink/$1/$2');
 $routes->get('schedules/(:any)/(:any)', 'SchedulesWeeks::index/$1/$2');
 $routes->get('schedules/latest', 'SchedulesWeeks::mostRecent');
-$routes->post('schedules', 'SchedulesWeeks::postWeekSchedule');
+$routes->post('schedules/(:any)/(:any)', 'SchedulesWeeks::postWeekSchedule/$1/$2');
 $routes->get('classes/date/(:any)', 'SchedulesWeeks::getDaySchedule/$1'); // gets all classes for one day by date
 
 // bookings routes

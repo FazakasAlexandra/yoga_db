@@ -12,7 +12,7 @@ class UsersModel extends Model
 
     public function isUserAuthorized($jwtHeader)
     {
-        if(!$jwtHeader) return false;
+        if (!$jwtHeader) return false;
 
         $user = $this->queryUser('jwt', $jwtHeader->getValue());
 
@@ -71,7 +71,29 @@ class UsersModel extends Model
     function userClientsHistory($id)
     {
         $db = \Config\Database::connect();
-        $query = $db->query("Select users.id as user_id, users.is_admin, users.jwt, bookings.id as booking_id, bookings.class_type, bookings.state, schedules_day.day, schedules_day.hour, classes.id as classes_id, classes.name, classes.description, classes.level, classes.online_price, classes.offline_price from users inner join bookings on bookings.user_id = users.id inner join schedules_weeks on bookings.schedules_weeks_id = schedules_weeks.id inner join schedules_day on schedules_weeks.schedule_day_id = schedules_day.id inner join classes on schedules_day.class_id = classes.id where is_admin = false and users.id = " . $id . " ");
+        $query = $db->query("SELECT
+        users.id AS user_id,
+        users.is_admin,
+        users.jwt,
+        bookings.id AS booking_id,
+        bookings.class_type,
+        bookings.state,
+        schedules_weeks.day,
+        schedules_weeks.hour,
+        classes.id AS classes_id,
+        classes.name,
+        classes.description,
+        classes.level,
+        classes.online_price,
+        classes.offline_price
+    FROM
+        users
+    INNER JOIN bookings ON bookings.user_id = users.id
+    INNER JOIN schedules_weeks ON bookings.schedules_weeks_id = schedules_weeks.id
+    INNER JOIN classes ON schedules_weeks.class_id = classes.id
+    WHERE
+        is_admin = FALSE AND users.id =" . $id . " ");
+        
         $results = [];
         for ($i = 0; $i < $query->getNumRows(); $i++) {
             $results[$i] = $query->getRowArray($i);
