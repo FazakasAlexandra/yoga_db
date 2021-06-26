@@ -6,7 +6,6 @@ use CodeIgniter\API\ResponseTrait;
 use App\Models\SchedulesWeeksModel;
 use CodeIgniter\HTTP\RequestInterface;
 use App\Models\UsersModel;
-use App\Models\SchedulesDayModel;
 
 class SchedulesWeeks extends BaseController
 {
@@ -24,12 +23,12 @@ class SchedulesWeeks extends BaseController
 
   public function getDaySchedule($date)
   {
-    $schedulesDayModel = new SchedulesDayModel();
+    $schedulesModel = new SchedulesWeeksModel();
 
     return $this->respond([
       'status' => 200,
       'error' => null,
-      'data' => $schedulesDayModel->getDaySchedule($date)
+      'data' => $schedulesModel->getDaySchedule($date)
     ]);
   }
 
@@ -55,35 +54,49 @@ class SchedulesWeeks extends BaseController
     ]);
   }
 
-  public function postWeekSchedule()
+  public function updateScheduledClassLink($scheduleWeekId, $link)
+  {
+    $SchedulesWeeksModel = new SchedulesWeeksModel();
+    $SchedulesWeeksModel->updateClassLink($scheduleWeekId, $link);
+    return $this->respond([
+      'status' => 201,
+      'error' => null,
+      'data' => 'class succesfully updated !'
+    ]);
+  }
+
+  public function postWeekSchedule($startDate, $endDate)
   {
     $usersModel = new UsersModel();
-    $schedulesDayModel = new schedulesDayModel();
-    $schedulesWeekModel = new SchedulesWeeksModel();
 
     if (!$usersModel->isUserAuthorized($this->request->getHeader('Authorization'))) {
-      return $this->respond($this->notAuthorized);
+      return $this->respond($this->notAuthorized, 401);
     }
 
+    $schedulesWeekModel = new SchedulesWeeksModel();
     $weekSchedule = $this->request->getJSON('true');
+    $message = 'The new week schedule was added!';
 
-    foreach ($weekSchedule as $daySchedule) {
-      foreach ($daySchedule['schedule'] as $schedule) {
-        $dayScheduleId = $schedulesDayModel->insertDaySchedule($schedule);
+    $scheduleError = $schedulesWeekModel->validation(count($weekSchedule), $startDate, $endDate);
 
-        $schedulesWeekModel->insertWeekSchedule([
-          'schedule_day_id' => $dayScheduleId,
-          'date_day' => $daySchedule['date_day'],
-          'date_week_start' => $daySchedule['date_week_start'],
-          'date_week_end' => $daySchedule['date_week_end']
-        ]);
+    if ($scheduleError['error']) {
+      if ($scheduleError['errorType'] == 'overlap') {
+        $schedulesWeekModel->deleteSchedule($startDate);
+        $message = 'The schedule for '
+          . date('d F', strtotime($startDate))
+          . ' to '
+          . date('d F', strtotime($endDate))
+          . ' was replaced !';
+      } else {
+        return $this->failValidationError($scheduleError['errorType'], null, $scheduleError['errorMessage']);
       }
     }
 
+    $schedulesWeekModel->insertWeekSchedule($weekSchedule, $startDate, $endDate);
+
     return $this->setResponseFormat('json')->respond([
-      'status' => 201,
-      'error' => null,
-      'data' => $weekSchedule
-    ]);
+      'error' => $scheduleError['errorType'],
+      'message' => $message
+    ], 201);
   }
 }

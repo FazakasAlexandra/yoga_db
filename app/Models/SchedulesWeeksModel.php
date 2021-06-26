@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
-use DateTime;
 
 class SchedulesWeeksModel extends Model
 {
@@ -27,7 +26,6 @@ class SchedulesWeeksModel extends Model
                         'class_id' => $schedule['class_id'],
                         'id' => uniqid(),
                         "schedules_weeks_id" => $schedule['schedules_weeks_id'],
-                        "schedule_day_id" => $schedule['schedule_day_id'],
                         "hour" => $schedule['hour'],
                         "link" => $schedule['link'],
                         "name" => $schedule['class_name'],
@@ -43,6 +41,14 @@ class SchedulesWeeksModel extends Model
             array_push($weekSchedule, $result);
         }
         return $weekSchedule;
+    }
+
+    function updateClassLink($scheduleWeekId, $link)
+    {
+        $db = \Config\Database::connect();
+        $builder = $db->table('schedules_weeks');
+
+        $builder->set('link', $link)->where('id', $scheduleWeekId)->update();
     }
 
     function getWeekSchedule($startDate, $endDate)
@@ -61,11 +67,79 @@ class SchedulesWeeksModel extends Model
         return $this->formatData($builder->get()->getResultArray());
     }
 
-    function insertWeekSchedule($weekSchedule)
+
+    function getDaySchedule($date)
+    {
+        $db = \Config\Database::connect();
+        $builder = $db->table('schedules_weeks_view');
+
+        return $builder->where('date_day =', $date)->get()->getResultArray();
+    }
+
+    function deleteSchedule($startDate)
+    {
+        $db = \Config\Database::connect();
+        $builder = $db->table('schedules_weeks');
+        $builder->delete(['date_week_start' => $startDate]);
+    }
+
+
+    function insertWeekSchedule($weekSchedule, $startDate, $endDate)
     {
         $db = \Config\Database::connect();
         $builder = $db->table('schedules_weeks');
 
-        $builder->insert($weekSchedule);
+        foreach ($weekSchedule as $daySchedule) {
+
+            foreach ($daySchedule['schedule'] as $schedule) {
+
+                $builder->insert([
+                    'hour' => $schedule['hour'],
+                    'class_id' => $schedule['class_id'],
+                    'day' => $schedule['day'],
+                    'date_day' => $daySchedule['date_day'],
+                    'date_week_start' => $startDate,
+                    'date_week_end' => $endDate
+                ]);
+            }
+        }
+    }
+
+    function validation($daysNumber, $dateWeekStart, $dateWeekEnd)
+    {
+        $db = \Config\Database::connect();
+        $builder = $db->table('most_recent_schedule');
+        $latestSchedule = $builder->get()->getFirstRow();
+
+        if ($daysNumber !== 7) {
+            return [
+                'error' => true,
+                'errorType' => 'incomplete',
+                'errorMessage' => 'A week schedule must contain the schedule for only 7 days'
+            ];
+        }
+
+        if ($dateWeekEnd < $latestSchedule->date_week_end) {
+            return [
+                'error' => true,
+                'errorType' => 'partial overlap',
+                'errorMessage' => 'Expected the new week schedule to start after or on '
+                    . date('d F', strtotime($latestSchedule->date_week_start))
+            ];
+        }
+
+        if ($dateWeekEnd == $latestSchedule->date_week_end) {
+            return [
+                'error' => true,
+                'errorType' => 'overlap',
+                'errorMessage' => 'Duplicate schedules are not allowed !'
+            ];
+        }
+
+        return [
+            'error' => false,
+            'errorType' => null,
+            'errorMessage' => null
+        ];
     }
 }

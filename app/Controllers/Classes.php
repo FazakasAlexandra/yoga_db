@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 use CodeIgniter\API\ResponseTrait;
 use App\Models\ClassesModel;
-use App\Models\SchedulesDayModel;
 use App\Models\UsersModel;
 use CodeIgniter\HTTP\RequestInterface;
 
@@ -30,17 +29,6 @@ class Classes extends BaseController
             'status' => 201,
             'error' => null,
             'data' => $classesModel->getClasses()
-        ]);
-    }
-
-    public function updateScheduledClassLink($scheduleDayId, $link)
-    {
-        $schedulesDayModel = new SchedulesDayModel();
-        $schedulesDayModel->updateClassLink($scheduleDayId, $link);
-        return $this->respond([
-            'status' => 201,
-            'error' => null,
-            'data' => 'class succesfully updated !'
         ]);
     }
 
