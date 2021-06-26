@@ -47,7 +47,7 @@ $routes->group('users', function ($routes) {
 });
 $routes->get('users/(:any)/(:any)', 'Users::getUser/$1/$2');
 $routes->get('users/clients', 'Users::usersNonAdm');
-//$routes->get('clientshistory/client/(:any)', 'ClientsHistory::client/$1');
+$routes->get('user/(:any)', 'Users::userNonAdm/$1');
 
 // subscriptions routes related to users
 $routes->get('subscriptions/decrease/(:any)/(:any)', 'Subscriptions::decreaseSubscriptionCoverage/$1/$2');
@@ -82,6 +82,13 @@ $routes->post('classes/newclass', 'Classes::addClass');
 $routes->get('classes/attendences', 'Classes::attendences');
 $routes->get('classes/dailyattendences/(:any)', 'Classes::dailyAttendances/$1');
 $routes->get('classes/dlt/(:any)', 'Classes::dltClass/$1');
+
+// events routes
+$routes->get('events', 'Events::index');
+$routes->get('events/(:any)', 'Events::getUpcomingEvents/$1');
+$routes->post('events/newevent', 'Events::addEvent');
+$routes->delete('events/dlt/(:any)', 'Events::dltEvent/$1');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

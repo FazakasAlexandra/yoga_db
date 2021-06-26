@@ -79,7 +79,7 @@ class Users extends BaseController
     $usersModel = new UsersModel();
     $subsModel = new SubscriptionsModel();
 
-    $nonAdminUsers = $usersModel->userClients();
+    $nonAdminUsers = $usersModel->userClients('all');
 
     foreach ($nonAdminUsers as &$user) {
       $user['history'] = $usersModel->userClientsHistory($user['id']);      
@@ -105,5 +105,32 @@ class Users extends BaseController
       'error' => null,
       'data' => $nonAdminUsers
     ]);
+  }
+
+  public function userNonAdm($jwt)
+  {
+    $usersModel = new UsersModel();
+    $subsModel = new SubscriptionsModel();
+
+    $client = $usersModel->userClients($jwt);
+    $user = $client[0];
+    $user['history'] = $usersModel->userClientsHistory($user['id']);      
+    $user['user_subscriptions'] = $subsModel->getSubscriptionsByUser($user['id']);
+
+    foreach($user['user_subscriptions'] as $sub) {
+      $disc = $subsModel->getSubscriptionDetails($sub->subscriptionID);
+      $entrancesdetails = $subsModel->getSubscriptionsEntrances($sub->usersSubscriptionID);
+      $freeentrancesdetails = $subsModel->getSubscriptionsFreeEntrances($sub->usersSubscriptionID);
+      $sub->discounts = $disc;
+      $sub->entrances = $entrancesdetails;
+      $sub->free_entrances = $freeentrancesdetails;
+    }
+
+    return $this->respond([
+      'status' => 201,
+      'error' => null,
+      'data' => $user
+    ]);
+
   }
 }
