@@ -22,18 +22,20 @@ class SchedulesWeeksModel extends Model
                     $result->dateWeekStart = $schedule['date_week_start'];
                     $result->dateWeekEnd = $schedule['date_week_end'];
 
-                    array_push($daySchedule, [
-                        'class_id' => $schedule['class_id'],
-                        'id' => uniqid(),
-                        "schedules_weeks_id" => $schedule['schedules_weeks_id'],
-                        "hour" => $schedule['hour'],
-                        "link" => $schedule['link'],
-                        "name" => $schedule['class_name'],
-                        "description" => $schedule['class_description'],
-                        "level" => $schedule['class_level'],
-                        "online_price" => $schedule['online_price'],
-                        "offline_price" => $schedule['offline_price']
-                    ]);
+                    if ($schedule['class_id']) {
+                        array_push($daySchedule, [
+                            'class_id' => $schedule['class_id'],
+                            'id' => uniqid(),
+                            "schedules_weeks_id" => $schedule['schedules_weeks_id'],
+                            "hour" => $schedule['hour'],
+                            "link" => $schedule['link'],
+                            "name" => $schedule['class_name'],
+                            "description" => $schedule['class_description'],
+                            "level" => $schedule['class_level'],
+                            "online_price" => $schedule['online_price'],
+                            "offline_price" => $schedule['offline_price']
+                        ]);
+                    }
                 }
             }
 
@@ -56,7 +58,7 @@ class SchedulesWeeksModel extends Model
         $db = \Config\Database::connect();
         $builder = $db->table('schedules_weeks_view');
 
-        return $this->formatData($builder->where('date_day >=', $startDate)->where('date_day <=', $endDate)->get()->getResultArray());
+        return $this->formatData($builder->orderBy('date_day', 'asc')->where('date_day >=', $startDate)->where('date_day <=', $endDate)->get()->getResultArray());
     }
 
     function getMostRecentSchedule()
@@ -91,21 +93,31 @@ class SchedulesWeeksModel extends Model
 
         foreach ($weekSchedule as $daySchedule) {
 
-            foreach ($daySchedule['schedule'] as $schedule) {
-
+            if (count($daySchedule['schedule']) == 0) {
                 $builder->insert([
-                    'hour' => $schedule['hour'],
-                    'class_id' => $schedule['class_id'],
-                    'day' => $schedule['day'],
+                    'hour' => null,
+                    'class_id' => null,
+                    'day' => $daySchedule['day'],
                     'date_day' => $daySchedule['date_day'],
                     'date_week_start' => $startDate,
                     'date_week_end' => $endDate
                 ]);
+            } else {
+                foreach ($daySchedule['schedule'] as $schedule) {
+                    $builder->insert([
+                        'hour' => $schedule['hour'],
+                        'class_id' => $schedule['class_id'],
+                        'day' => $daySchedule['day'],
+                        'date_day' => $daySchedule['date_day'],
+                        'date_week_start' => $startDate,
+                        'date_week_end' => $endDate
+                    ]);
+                }
             }
         }
     }
 
-    function validation($daysNumber, $dateWeekStart, $dateWeekEnd)
+    function validation($daysNumber, $dateWeekEnd)
     {
         $db = \Config\Database::connect();
         $builder = $db->table('most_recent_schedule');

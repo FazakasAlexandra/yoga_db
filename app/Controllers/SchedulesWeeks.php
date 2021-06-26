@@ -77,7 +77,7 @@ class SchedulesWeeks extends BaseController
     $weekSchedule = $this->request->getJSON('true');
     $message = 'The new week schedule was added!';
 
-    $scheduleError = $schedulesWeekModel->validation(count($weekSchedule), $startDate, $endDate);
+    $scheduleError = $schedulesWeekModel->validation(count($weekSchedule), $endDate);
 
     if ($scheduleError['error']) {
       if ($scheduleError['errorType'] == 'overlap') {
