@@ -27,13 +27,6 @@ class ClassesModel extends Model
         return count($attendences);
     }
 
-    function getClassesAttendences(){
-        $db = \Config\Database::connect();
-        $builder = $db->table('classes_attendences');
-
-        return $builder->get()->getResultArray();
-    }
-
     function getDailyPresence($id){
         $db = \Config\Database::connect();
         $builder = $db->table('classes_daily_attendences');

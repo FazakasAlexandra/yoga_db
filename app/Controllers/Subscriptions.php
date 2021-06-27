@@ -80,10 +80,10 @@ class Subscriptions extends BaseController
         ]);
     }
 
-    public function deleteSubscription($id)
+    public function deleteSubscription($id, $image)
     {
         $subscriptionsModel = new SubscriptionsModel();
-        $subscriptionsModel->deleteSubscription($id);
+        $subscriptionsModel->deleteSubscription($id, $image);
         return $this->respond([
             'status' => 200,
             'error' => null,

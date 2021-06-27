@@ -155,42 +155,40 @@ class SubscriptionsModel extends Model
         return $imgName . '.png';
     }
 
-    // FIX ME should delete the images from directory too 
-    function deleteSubscription($subscriptionId)
+    function deleteSubscription($subscriptionId, $image)
     {
         $db = \Config\Database::connect();
         $builder = $db->table('subscriptions');
-
         $builder->delete(['id' => $subscriptionId]);
+
+        if(empty($builder->where('id', $subscriptionId)->get()->getResultArray()) && $image != 'icon.png')
+        {
+            if(unlink(FCPATH.'public/assets/subscriptions/'.$image))
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
 
     function getSubscriptionsForCombo(){
         $db = \Config\Database::connect();
         $query = $db->query("select subscriptions.id, subscriptions.name from subscriptions");
-        $results = [];
-        for($i = 0; $i < $query->getNumRows(); $i++){
-            $results[$i] = $query->getRowArray($i);
-        };
+        $results = $query->getResult();
         return $results;
     }
 
     function getSubscriptionsByUser($id){
         $db = \Config\Database::connect();
         $query = $db->query("select users_subscriptions.user_id, users_subscriptions.id as usersSubscriptionID, users.name, subscriptions.id as subscriptionID, subscriptions.name, users_subscriptions.expiration_date, subscriptions.image from users_subscriptions left join subscriptions on users_subscriptions.subscription_id = subscriptions.id left join users on users.id = users_subscriptions.user_id where users_subscriptions.user_id = ". $id);
-        $results = [];
-        for($i = 0; $i < $query->getNumRows(); $i++){
-            $results[$i] = $query->getRow($i);
-        };
+        $results = $query->getResult();
         return $results;
     }
 
     function getSubscriptionDetails($iduser){
         $db = \Config\Database::connect();
         $query = $db->query("select subscriptions.id, subscriptions.name, discounts_view.class_name, discounts_view.amount, discounts_view.class_type from subscriptions join discounts_view on subscriptions.id = discounts_view.subscription_id where subscriptions.id = ". $iduser);
-        $results = [];
-        for($i = 0; $i < $query->getNumRows(); $i++){
-            $results[$i] = $query->getRow($i);
-        };
+
+        $results = $query->getResult();
         return $results;
     }
 

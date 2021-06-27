@@ -44,4 +44,19 @@ class EventsModel extends Model
 
         $db->query("insert into `events` (`id`, `title`, `description`, `image`, `date`, `hour`, `link`, `location`) VALUES (NULL, '". $data['name'] . "', '" . $data['description'] . "', '" . $imageName . "', '" . $data['date'] . "', '" . $data['hour'] . "', '" . $data['link'] . "', '" . $data['location'] . "')");
     }
+
+    function deleteEvent($id, $img){
+        $db = \Config\Database::connect();
+
+        $builder = $db->table('events');
+        $builder->delete(['id' => $id]);
+        
+        if(empty($builder->where('id', $id)->get()->getResultArray())){
+            if(unlink(FCPATH.'public/assets/events/'.$img))
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+    
 }

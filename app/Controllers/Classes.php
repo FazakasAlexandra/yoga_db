@@ -35,6 +35,7 @@ class Classes extends BaseController
     public function dltClass($id)
     {
         $classesModel = new ClassesModel();
+        
         $class = $classesModel->find($id);
         if ($class) {
             $classesModel->delete($id);
@@ -44,17 +45,6 @@ class Classes extends BaseController
             'status' => 201,
             'error' => null,
             'data' => $classesModel->getClasses()
-        ]);
-    }
-
-    public function attendences()
-    {
-        $classesModel = new ClassesModel();
-
-        return $this->respond([
-            'status' => 201,
-            'error' => null,
-            'data' => $classesModel->getClassesAttendences()
         ]);
     }
 
@@ -85,7 +75,7 @@ class Classes extends BaseController
             'status' => 201,
             'error' => null,
             'message' => "Class added!",
-            "data" => $data
+            'data' => $data
         ]);
     }
 }
