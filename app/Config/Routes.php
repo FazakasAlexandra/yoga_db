@@ -23,23 +23,6 @@ $routes->setTranslateURIDashes(false);
 $routes->set404Override();
 $routes->setAutoRoute(false);
 
-/*
- * --------------------------------------------------------------------
- * Route Definitions
- * --------------------------------------------------------------------
- */
-
-/* 
-GET 
-  users/ 
-    -> all users
-  users/(:criteria)/(:value)
-    -> query user based on any single criteria
-POST
-  users/
-    -> insert a single user
-*/
-
 // users routes
 $routes->group('users', function ($routes) {
 	$routes->get('/', 'Users::index');
@@ -63,20 +46,20 @@ $routes->get('subscriptionnames', 'Subscriptions::getSubscriptionsNames');
 $routes->post('subscriptions/(:any)/(:any)', 'Subscriptions::addSubscriptionToUser/$1/$2');
 
 // schedules routes
+$routes->get('schedules/classes/date/(:any)', 'SchedulesWeeks::getDaySchedule/$1'); // gets all classes for one day by date
 $routes->put('schedules/links/classes/(:any)/(:any)', 'SchedulesWeeks::updateScheduledClassLink/$1/$2');
 $routes->get('schedules/(:any)/(:any)', 'SchedulesWeeks::index/$1/$2');
 $routes->get('schedules/latest', 'SchedulesWeeks::mostRecent');
 $routes->post('schedules/(:any)/(:any)', 'SchedulesWeeks::postWeekSchedule/$1/$2');
-$routes->get('classes/date/(:any)', 'SchedulesWeeks::getDaySchedule/$1'); // gets all classes for one day by date
 
 // bookings routes
 $routes->post('bookings/(:any)/(:any)', 'Bookings::postBooking/$1/$2');
+$routes->get('bookings/classes/(:any)', 'Bookings::getClassBookings/$1'); // gets all bookings for one class based on schedule_weeks_id
 //$routes->match(['post'], 'chgstatus/(:any)/(:any)', 'Bookings::chgStatus/$1/$2');
 $routes->get('chgstatus/(:any)/(:any)', 'Bookings::chgStatus/$1/$2');
 //$routes->get('bookings/(:any)', 'Bookings::getBooking/$1');
 
 // classes routes
-$routes->get('classes/bookings/(:any)', 'Bookings::getClassBookings/$1'); // gets all bookings for one class based on schedule_weeks_id
 $routes->get('classes', 'Classes::index');
 $routes->post('classes/newclass', 'Classes::addClass');
 $routes->get('classes/attendences', 'Classes::attendences');

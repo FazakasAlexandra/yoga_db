@@ -74,8 +74,15 @@ class SchedulesWeeksModel extends Model
     {
         $db = \Config\Database::connect();
         $builder = $db->table('schedules_weeks_view');
+        $daySchedule = $builder->where('date_day =', $date)->get()->getResultArray();
 
-        return $builder->where('date_day =', $date)->get()->getResultArray();
+        foreach ($daySchedule as $key => $schedule) {
+            if (!$schedule['class_id']) {
+                unset($daySchedule[$key]);
+            }
+        }
+
+        return $daySchedule;
     }
 
     function deleteSchedule($startDate)
@@ -117,7 +124,7 @@ class SchedulesWeeksModel extends Model
         }
     }
 
-    function validation($daysNumber, $dateWeekEnd)
+    function validation($daysNumber, $startDate, $dateWeekEnd)
     {
         $db = \Config\Database::connect();
         $builder = $db->table('most_recent_schedule');
@@ -131,12 +138,24 @@ class SchedulesWeeksModel extends Model
             ];
         }
 
+        $partialOverlapMsg = 'Expected the new week schedule to start on '
+            . date('d F', strtotime($latestSchedule->date_week_start))
+            . ' or after '
+            .  date('d F', strtotime($latestSchedule->date_week_end));
+
+        if ($latestSchedule->date_week_start < $startDate && $latestSchedule->date_week_end < $dateWeekEnd) {
+            return [
+                'error' => true,
+                'errorType' => 'partial overlap',
+                'errorMessage' => $partialOverlapMsg
+            ];
+        }
+
         if ($dateWeekEnd < $latestSchedule->date_week_end) {
             return [
                 'error' => true,
                 'errorType' => 'partial overlap',
-                'errorMessage' => 'Expected the new week schedule to start after or on '
-                    . date('d F', strtotime($latestSchedule->date_week_start))
+                'errorMessage' => $partialOverlapMsg
             ];
         }
 
