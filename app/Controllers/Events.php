@@ -5,7 +5,6 @@ namespace App\Controllers;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\EventsModel;
 use App\Models\UsersModel;
-//use CodeIgniter\HTTP\RequestInterface;
 
 class Events extends BaseController
 {
