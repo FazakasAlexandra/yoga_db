@@ -45,14 +45,27 @@ class UsersModel extends Model
         return $db->insertID();
     }
 
-    function userClients()
+    function userClients($text)
     {
         $db = \Config\Database::connect();
-        return $this->db->table('users')
-            ->where(['is_admin !=' => 'true'])
+        $builder = $db->table('users');
+
+        if($text == 'all') 
+        {
+            $clients = $builder->where(['is_admin !=' => 'true'])
             ->orderBy('name', 'ASC')
             ->get()
             ->getResultArray();
+            
+        }else
+        {   
+            $clients = $builder->where(['is_admin !=' => 'true'])
+            ->where('jwt', $text)
+            ->get()
+            ->getResultArray();
+        }
+        
+        return $clients;
     }
 
     function userClientsHistory($id)
