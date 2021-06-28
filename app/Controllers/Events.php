@@ -61,24 +61,18 @@ class Events extends BaseController
         ]);
     }
 
-    public function dltEvent($id)
+    public function dltEvent($id, $img)
     {
-        $usersModel = new UsersModel();
-
-        if (!$usersModel->isUserAuthorized($this->request->getHeader('Authorization'))) {
-            return $this->respond($this->notAuthorized);
-        }
-        
         $eventsModel = new EventsModel();
         $event = $eventsModel->find($id);
         if ($event) {
-            $eventsModel->delete($id);
+            $eventsModel->deleteEvent($id, $img);
         };
 
         return $this->respond([
             'status' => 201,
             'error' => null,
-            'message' => 'Event deleted!',
+            'message' => 'event deleted succesfully',
             'data' => $eventsModel->getEvents()
         ]);
     }

@@ -40,7 +40,7 @@ $routes->delete('subscriptions/user/(:any)', 'Subscriptions::removeUserSubscript
 
 // subscriptions routes
 $routes->get('subscriptions/', 'Subscriptions::index');
-$routes->delete('subscriptions/(:any)', 'Subscriptions::deleteSubscription/$1');
+$routes->delete('subscriptions/(:any)/(:any)', 'Subscriptions::deleteSubscription/$1/$2');
 $routes->post('subscriptions', 'Subscriptions::addSubscription');
 $routes->get('subscriptionnames', 'Subscriptions::getSubscriptionsNames');
 $routes->post('subscriptions/(:any)/(:any)', 'Subscriptions::addSubscriptionToUser/$1/$2');
@@ -62,7 +62,6 @@ $routes->get('chgstatus/(:any)/(:any)', 'Bookings::chgStatus/$1/$2');
 // classes routes
 $routes->get('classes', 'Classes::index');
 $routes->post('classes/newclass', 'Classes::addClass');
-$routes->get('classes/attendences', 'Classes::attendences');
 $routes->get('classes/dailyattendences/(:any)', 'Classes::dailyAttendances/$1');
 $routes->get('classes/dlt/(:any)', 'Classes::dltClass/$1');
 
@@ -70,7 +69,7 @@ $routes->get('classes/dlt/(:any)', 'Classes::dltClass/$1');
 $routes->get('events', 'Events::index');
 $routes->get('events/(:any)', 'Events::getUpcomingEvents/$1');
 $routes->post('events/newevent', 'Events::addEvent');
-$routes->delete('events/dlt/(:any)', 'Events::dltEvent/$1');
+$routes->delete('events/dlt/(:any)/(:any)', 'Events::dltEvent/$1/$2');
 
 /*
  * --------------------------------------------------------------------
