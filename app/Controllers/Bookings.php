@@ -51,7 +51,6 @@ class Bookings extends BaseController
 
         $existingBooking = $bookingsModel->checkExistingBooking($user->id, $weekScheduleId);
 
-        // If booking for a class has been canceled and then booked again, just update it. Don't insert new one
         if($existingBooking){
             $bookingsModel->updateBooking($existingBooking->id, $classType);
         } else {

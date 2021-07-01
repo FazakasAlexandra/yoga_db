@@ -67,7 +67,7 @@ $routes->put('schedules/links/classes/(:any)/(:any)', 'SchedulesWeeks::updateSch
 $routes->get('schedules/(:any)/(:any)', 'SchedulesWeeks::index/$1/$2');
 $routes->get('schedules/latest', 'SchedulesWeeks::mostRecent');
 $routes->post('schedules/(:any)/(:any)', 'SchedulesWeeks::postWeekSchedule/$1/$2');
-$routes->get('classes/date/(:any)', 'SchedulesWeeks::getDaySchedule/$1'); // gets all classes for one day by date
+$routes->get('classes/date/(:any)', 'SchedulesWeeks::getDaySchedule/$1');
 
 // bookings routes
 $routes->post('bookings/(:any)/(:any)', 'Bookings::postBooking/$1/$2');
