@@ -51,7 +51,6 @@ $routes->put('schedules/links/classes/(:any)/(:any)', 'SchedulesWeeks::updateSch
 $routes->get('schedules/(:any)/(:any)', 'SchedulesWeeks::index/$1/$2');
 $routes->get('schedules/latest', 'SchedulesWeeks::mostRecent');
 $routes->post('schedules/(:any)/(:any)', 'SchedulesWeeks::postWeekSchedule/$1/$2');
-
 // bookings routes
 $routes->post('bookings/(:any)/(:any)', 'Bookings::postBooking/$1/$2');
 $routes->get('bookings/classes/(:any)', 'Bookings::getClassBookings/$1'); // gets all bookings for one class based on schedule_weeks_id
@@ -70,6 +69,7 @@ $routes->get('events', 'Events::index');
 $routes->get('events/(:any)', 'Events::getUpcomingEvents/$1');
 $routes->post('events/newevent', 'Events::addEvent');
 $routes->delete('events/dlt/(:any)/(:any)', 'Events::dltEvent/$1/$2');
+
 
 /*
  * --------------------------------------------------------------------

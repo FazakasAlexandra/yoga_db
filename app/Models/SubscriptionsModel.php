@@ -60,7 +60,7 @@ class SubscriptionsModel extends Model
         return $builder->where($key, $id)->get()->getResultArray();
     }
 
-    // checks if a given subscription of a user has discount/free_entrences/entrences for a given class
+   
     function getUserSubscriptionByClass($userId, $classId)
     {
         $userSubscriptions = $this->getUserSubscriptions($userId);
