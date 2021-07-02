@@ -88,6 +88,7 @@ $routes->get('events/(:any)', 'Events::getUpcomingEvents/$1');
 $routes->post('events/newevent', 'Events::addEvent');
 $routes->delete('events/dlt/(:any)/(:any)', 'Events::dltEvent/$1/$2');
 
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
