@@ -76,7 +76,7 @@ $routes->get('chgstatus/(:any)/(:any)', 'Bookings::chgStatus/$1/$2');
 //$routes->get('bookings/(:any)', 'Bookings::getBooking/$1');
 
 // classes routes
-$routes->get('classes/bookings/(:any)', 'Bookings::getClassBookings/$1'); // gets all bookings for one class based on schedule_weeks_id
+$routes->get('bookings/classes/(:any)', 'Bookings::getClassBookings/$1'); // gets all bookings for one class based on schedule_weeks_id
 $routes->get('classes', 'Classes::index');
 $routes->post('classes/newclass', 'Classes::addClass');
 $routes->get('classes/dailyattendences/(:any)', 'Classes::dailyAttendances/$1');
