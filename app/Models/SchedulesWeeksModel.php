@@ -143,7 +143,7 @@ class SchedulesWeeksModel extends Model
             . ' or after '
             .  date('d F', strtotime($latestSchedule->date_week_end));
 
-        if ($latestSchedule->date_week_start < $startDate && $latestSchedule->date_week_end < $dateWeekEnd) {
+        if ($startDate > $latestSchedule->date_week_start && $startDate < $latestSchedule->date_week_end) {
             return [
                 'error' => true,
                 'errorType' => 'partial overlap',

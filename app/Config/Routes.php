@@ -51,12 +51,11 @@ $routes->put('schedules/links/classes/(:any)/(:any)', 'SchedulesWeeks::updateSch
 $routes->get('schedules/(:any)/(:any)', 'SchedulesWeeks::index/$1/$2');
 $routes->get('schedules/latest', 'SchedulesWeeks::mostRecent');
 $routes->post('schedules/(:any)/(:any)', 'SchedulesWeeks::postWeekSchedule/$1/$2');
+
 // bookings routes
 $routes->post('bookings/(:any)/(:any)', 'Bookings::postBooking/$1/$2');
 $routes->get('bookings/classes/(:any)', 'Bookings::getClassBookings/$1'); // gets all bookings for one class based on schedule_weeks_id
-//$routes->match(['post'], 'chgstatus/(:any)/(:any)', 'Bookings::chgStatus/$1/$2');
 $routes->get('chgstatus/(:any)/(:any)', 'Bookings::chgStatus/$1/$2');
-//$routes->get('bookings/(:any)', 'Bookings::getBooking/$1');
 
 // classes routes
 $routes->get('classes', 'Classes::index');

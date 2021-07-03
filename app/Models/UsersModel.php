@@ -50,21 +50,18 @@ class UsersModel extends Model
         $db = \Config\Database::connect();
         $builder = $db->table('users');
 
-        if($text == 'all') 
-        {
+        if ($text == 'all') {
             $clients = $builder->where(['is_admin !=' => 'true'])
-            ->orderBy('name', 'ASC')
-            ->get()
-            ->getResultArray();
-            
-        }else
-        {   
+                ->orderBy('name', 'ASC')
+                ->get()
+                ->getResultArray();
+        } else {
             $clients = $builder->where(['is_admin !=' => 'true'])
-            ->where('jwt', $text)
-            ->get()
-            ->getResultArray();
+                ->where('jwt', $text)
+                ->get()
+                ->getResultArray();
         }
-        
+
         return $clients;
     }
 
@@ -79,6 +76,7 @@ class UsersModel extends Model
         bookings.class_type,
         bookings.state,
         schedules_weeks.day,
+        schedules_weeks.date_day,
         schedules_weeks.hour,
         classes.id AS classes_id,
         classes.name,
@@ -93,7 +91,7 @@ class UsersModel extends Model
     INNER JOIN classes ON schedules_weeks.class_id = classes.id
     WHERE
         is_admin = FALSE AND users.id =" . $id . " ");
-        
+
         $results = [];
         for ($i = 0; $i < $query->getNumRows(); $i++) {
             $results[$i] = $query->getRowArray($i);
