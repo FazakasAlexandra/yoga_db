@@ -164,9 +164,9 @@ class SubscriptionsModel extends Model
         if(empty($builder->where('id', $subscriptionId)->get()->getResultArray()) && $image != 'icon.png')
         {
             if(unlink(FCPATH.'public/assets/subscriptions/'.$image))
-            return TRUE;
+            return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
 

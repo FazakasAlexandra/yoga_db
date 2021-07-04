@@ -58,15 +58,24 @@ class SchedulesWeeksModel extends Model
         $db = \Config\Database::connect();
         $builder = $db->table('schedules_weeks_view');
 
-        return $this->formatData($builder->orderBy('date_day', 'asc')->where('date_day >=', $startDate)->where('date_day <=', $endDate)->get()->getResultArray());
+        $weekSchedule = $builder->orderBy('date_day', 'asc')->where('date_day >=', $startDate)->where('date_day <=', $endDate)->get()->getResultArray();
+        if (count($weekSchedule)) {
+            return $this->formatData($weekSchedule);
+        }
+        return $weekSchedule;
     }
 
     function getMostRecentSchedule()
     {
         $db = \Config\Database::connect();
         $builder = $db->table('most_recent_schedule');
+        $mostRecentSchedule = $builder->get()->getResultArray();
 
-        return $this->formatData($builder->get()->getResultArray());
+        if (count($mostRecentSchedule)) {
+            return $this->formatData($builder->get()->getResultArray());
+        }
+
+        return $mostRecentSchedule;
     }
 
 
@@ -134,37 +143,39 @@ class SchedulesWeeksModel extends Model
             return [
                 'error' => true,
                 'errorType' => 'incomplete',
-                'errorMessage' => 'A week schedule must contain the schedule for only 7 days'
+                'errorMessage' => 'A week schedule must contain the schedule for exactly 7 days'
             ];
         }
 
-        $partialOverlapMsg = 'Expected the new week schedule to start on '
-            . date('d F', strtotime($latestSchedule->date_week_start))
-            . ' or after '
-            .  date('d F', strtotime($latestSchedule->date_week_end));
+        if ($latestSchedule) {
+            $partialOverlapMsg = 'Expected the new week schedule to start on '
+                . date('d F', strtotime($latestSchedule->date_week_start))
+                . ' or after '
+                .  date('d F', strtotime($latestSchedule->date_week_end));
 
-        if ($startDate > $latestSchedule->date_week_start && $startDate < $latestSchedule->date_week_end) {
-            return [
-                'error' => true,
-                'errorType' => 'partial overlap',
-                'errorMessage' => $partialOverlapMsg
-            ];
-        }
+            if ($startDate > $latestSchedule->date_week_start && $startDate < $latestSchedule->date_week_end) {
+                return [
+                    'error' => true,
+                    'errorType' => 'partial overlap',
+                    'errorMessage' => $partialOverlapMsg
+                ];
+            }
 
-        if ($dateWeekEnd < $latestSchedule->date_week_end) {
-            return [
-                'error' => true,
-                'errorType' => 'partial overlap',
-                'errorMessage' => $partialOverlapMsg
-            ];
-        }
+            if ($dateWeekEnd < $latestSchedule->date_week_end) {
+                return [
+                    'error' => true,
+                    'errorType' => 'partial overlap',
+                    'errorMessage' => $partialOverlapMsg
+                ];
+            }
 
-        if ($dateWeekEnd == $latestSchedule->date_week_end) {
-            return [
-                'error' => true,
-                'errorType' => 'overlap',
-                'errorMessage' => 'Duplicate schedules are not allowed !'
-            ];
+            if ($dateWeekEnd == $latestSchedule->date_week_end) {
+                return [
+                    'error' => true,
+                    'errorType' => 'overlap',
+                    'errorMessage' => 'Duplicate schedules are not allowed !'
+                ];
+            }
         }
 
         return [
