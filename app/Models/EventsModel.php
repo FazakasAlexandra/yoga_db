@@ -27,7 +27,7 @@ class EventsModel extends Model
     {
         $imgName = uniqid('event');
         $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64Data));
-        $path = '/wamp64/www/yoga/public/assets/events/';
+        $path = FCPATH.'public/assets/events/';
 
         file_put_contents($path . $imgName . '.png', $data);
 

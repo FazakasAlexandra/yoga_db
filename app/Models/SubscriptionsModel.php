@@ -147,8 +147,7 @@ class SubscriptionsModel extends Model
         $imgName = uniqid('subscription');
         $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64Data));
 
-        // FIX ME get my path dinamicaly
-        $path = '/wamp64/www/yoga/public/assets/subscriptions/';
+        $path = FCPATH.'public/assets/subscriptions/';
 
         file_put_contents($path . $imgName . '.png', $data);
 
